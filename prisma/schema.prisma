@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String           @id @default(cuid())
+  username       String           @unique
+  passwordHash   String
+  role           String           @default("member")
+  active         Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  sessions       Session[]
+  timeEntries    TimeEntry[]
+  calendarEntries CalendarEntry[]
+  requestComments RequestComment[]
+  assignedRequests BookingRequest[] @relation("AssignedRequests")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model TimeEntry {
+  id       String   @id @default(cuid())
+  userId   String
+  start    DateTime
+  end      DateTime?
+  duration Int?     
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, start])
+}
+
+model CalendarEntry {
+  id            String           @id @default(cuid())
+  title         String
+  start         DateTime
+  end           DateTime
+  location      String
+  notes         String?
+  category      String
+  assignedUsers User[]
+  @@index([start, end])
+}
+
+model Event {
+  id        String              @id @default(cuid())
+  name      String
+  start     DateTime
+  end       DateTime
+  venue     String
+  contact   String
+  status    String              @default("geplant")
+  notes     String?
+  checklist EventChecklistItem[]
+  equipment EventEquipment[]
+}
+
+model EventChecklistItem {
+  id      String  @id @default(cuid())
+  eventId String
+  area    String
+  text    String
+  done    Boolean @default(false)
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  @@index([eventId])
+}
+
+model EventEquipment {
+  id              String  @id @default(cuid())
+  eventId         String
+  itemName        String
+  quantity        Int
+  condition       String
+  storageLocation String
+  reserved        Boolean @default(false)
+  event           Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  @@index([eventId])
+}
+
+model BookingRequest {
+  id                String        @id @default(cuid())
+  requesterName     String
+  email             String
+  phone             String?
+  eventTitle        String
+  start             DateTime
+  end               DateTime
+  location          String
+  audienceSize      Int
+  techNeedsCategories String
+  techNeedsText     String?
+  budget            Int?
+  notes             String?
+  status            String        @default("neu")
+  assignedToUserId  String?
+  assignedToUser    User?         @relation("AssignedRequests", fields: [assignedToUserId], references: [id])
+  createdAt         DateTime      @default(now())
+  comments          RequestComment[]
+  @@index([status, start])
+}
+
+model RequestComment {
+  id        String   @id @default(cuid())
+  requestId String
+  userId    String
+  text      String
+  createdAt DateTime @default(now())
+  request   BookingRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([requestId])
+}

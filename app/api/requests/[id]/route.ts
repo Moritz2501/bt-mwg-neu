@@ -1,0 +1,48 @@
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
+import { getSessionUser } from "@/lib/auth";
+import { requestStatusSchema } from "@/lib/validation";
+
+export async function GET(_request: Request, { params }: { params: { id: string } }) {
+  const user = await getSessionUser();
+  if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  const request = await prisma.bookingRequest.findUnique({
+    where: { id: params.id },
+    include: { comments: { include: { user: true } } }
+  });
+
+  if (!request) return NextResponse.json({ message: "Not found" }, { status: 404 });
+  return NextResponse.json(request);
+}
+
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
+  const user = await getSessionUser();
+  if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  const body = await request.json();
+  const parsed = requestStatusSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ message: "Ungueltige Daten" }, { status: 400 });
+  }
+
+  const updated = await prisma.bookingRequest.update({
+    where: { id: params.id },
+    data: {
+      status: parsed.data.status as any,
+      assignedToUserId: parsed.data.assignedToUserId ?? undefined
+    }
+  });
+
+  if (parsed.data.internalNote) {
+    await prisma.requestComment.create({
+      data: {
+        requestId: params.id,
+        userId: user.id,
+        text: parsed.data.internalNote
+      }
+    });
+  }
+
+  return NextResponse.json(updated);
+}
