@@ -60,7 +60,7 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
       <form onSubmit={onSubmit} className="grid gap-4">
         <div className="grid md:grid-cols-2 gap-4">
           <input
-            placeholder="Name"
+            placeholder="Name des Antragstellers"
             value={form.requesterName}
             onChange={(e) => setForm({ ...form, requesterName: e.target.value })}
             required
