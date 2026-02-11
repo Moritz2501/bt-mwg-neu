@@ -3,7 +3,7 @@
 export default function Topbar({ username }: { username: string }) {
   async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
-    window.location.href = "/login";
+    window.location.href = "/";
   }
 
   return (

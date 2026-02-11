@@ -6,7 +6,7 @@ export default function BookingSuccess() {
       <h1 className="text-3xl font-semibold">Danke fuer deine Anfrage!</h1>
       <p className="text-night-200">Wir melden uns zeitnah mit einer Rueckmeldung.</p>
       <Link className="rounded-pill px-6 py-3 bg-night-700 text-white" href="/">
-        Zurueck zur Landing
+        Zurueck zur Startseite
       </Link>
     </main>
   );
