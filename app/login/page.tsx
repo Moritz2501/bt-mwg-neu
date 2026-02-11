@@ -47,6 +47,12 @@ export default function LoginPage() {
           <button className="rounded-pill px-6 py-3 bg-glow text-ink font-semibold" type="submit">
             Login
           </button>
+          <a
+            className="rounded-pill px-6 py-3 border border-night-600 text-center"
+            href="/"
+          >
+            Zurück zur Startseite
+          </a>
         </div>
       </form>
     </main>
