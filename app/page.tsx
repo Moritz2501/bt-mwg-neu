@@ -15,6 +15,9 @@ export default function LandingPage() {
 
       <section className="flex-1 px-6 pb-12">
         <div className="max-w-4xl mx-auto">
+          <div className="mb-6 text-center text-night-200">
+            Herzlich willkommen bei der Bühnentechnik des Maria-Wächtler-Gymnasiums
+          </div>
           <BookingForm title="Event anfragen" />
         </div>
       </section>

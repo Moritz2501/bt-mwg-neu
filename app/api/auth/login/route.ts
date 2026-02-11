@@ -2,7 +2,15 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { loginSchema } from "@/lib/validation";
 import { verifyPassword } from "@/lib/password";
-import { createSession } from "@/lib/auth";
+import {
+  createSession,
+  destroySessionByToken,
+  getExpiredCookieOptions,
+  getSessionCookieOptions,
+  getSessionToken,
+  ADMIN_COOKIE,
+  SESSION_COOKIE
+} from "@/lib/auth";
 import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(request: Request) {
@@ -28,6 +36,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Login fehlgeschlagen" }, { status: 401 });
   }
 
-  await createSession(user.id);
-  return NextResponse.json({ ok: true });
+  const existingToken = getSessionToken();
+  await destroySessionByToken(existingToken);
+
+  const session = await createSession(user.id);
+  const response = NextResponse.json({ ok: true });
+  response.cookies.set(SESSION_COOKIE, session.token, getSessionCookieOptions(session.expiresAt));
+  response.cookies.set(ADMIN_COOKIE, "", getExpiredCookieOptions());
+  return response;
 }

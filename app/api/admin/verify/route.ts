@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { adminVerifySchema } from "@/lib/validation";
-import { requireAdmin, setAdminVerified } from "@/lib/auth";
+import { requireAdmin, getAdminVerifiedCookieOptions, ADMIN_COOKIE } from "@/lib/auth";
 import { rateLimit } from "@/lib/rateLimit";
 
 export async function POST(request: Request) {
@@ -32,6 +32,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Admin Passwort falsch" }, { status: 401 });
   }
 
-  setAdminVerified();
-  return NextResponse.json({ ok: true });
+  const response = NextResponse.json({ ok: true });
+  response.cookies.set(ADMIN_COOKIE, "yes", getAdminVerifiedCookieOptions());
+  return response;
 }
