@@ -18,7 +18,7 @@ export default function Sidebar({ isAdmin }: { isAdmin: boolean }) {
 
   return (
     <aside className="hidden lg:flex lg:flex-col lg:w-64 bg-ink/60 border-r border-night-800 p-6 gap-6">
-      <div className="text-xl font-semibold text-night-100">StageFlow</div>
+      <div className="text-xl font-semibold text-night-100">Bühnentechnik-MWG</div>
       <nav className="flex flex-col gap-2">
         {links
           .filter((link) => (link.href.startsWith("/admin") ? isAdmin : true))

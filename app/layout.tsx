@@ -6,7 +6,7 @@ const space = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
 const sora = Sora({ subsets: ["latin"], variable: "--font-sora" });
 
 export const metadata: Metadata = {
-  title: "StageFlow",
+  title: "Bühnentechnik-MWG",
   description: "Buehnentechnik Verwaltung"
 };
 

@@ -5,10 +5,20 @@ import { requireAuth } from "@/lib/auth";
 export default async function DashboardPage() {
   await requireAuth();
 
-  const [users, events, requests] = await Promise.all([
+  const now = new Date();
+  const [users, events, requests, latestRequests, nextEntries] = await Promise.all([
     prisma.user.count(),
     prisma.event.count(),
-    prisma.bookingRequest.count()
+    prisma.bookingRequest.count(),
+    prisma.bookingRequest.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 2
+    }),
+    prisma.calendarEntry.findMany({
+      where: { start: { gte: now } },
+      orderBy: { start: "asc" },
+      take: 2
+    })
   ]);
 
   return (
@@ -29,6 +39,40 @@ export default async function DashboardPage() {
           </div>
         </div>
       </Section>
+      <div className="grid lg:grid-cols-2 gap-6">
+        <Section title="Neueste Anfragen">
+          {latestRequests.length === 0 ? (
+            <div className="text-night-300">Keine Anfragen vorhanden.</div>
+          ) : (
+            <div className="grid gap-3">
+              {latestRequests.map((request) => (
+                <div key={request.id} className="border border-night-800 rounded-xl p-4">
+                  <div className="font-semibold">{request.eventTitle}</div>
+                  <div className="text-night-300 text-sm">{request.requesterName}</div>
+                  <div className="text-night-400 text-xs">Status: {request.status}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Section>
+        <Section title="Naechste Termine">
+          {nextEntries.length === 0 ? (
+            <div className="text-night-300">Keine Termine geplant.</div>
+          ) : (
+            <div className="grid gap-3">
+              {nextEntries.map((entry) => (
+                <div key={entry.id} className="border border-night-800 rounded-xl p-4">
+                  <div className="font-semibold">{entry.title}</div>
+                  <div className="text-night-300 text-sm">
+                    {entry.start.toLocaleString("de-DE")}
+                  </div>
+                  <div className="text-night-400 text-xs">{entry.location}</div>
+                </div>
+              ))}
+            </div>
+          )}
+        </Section>
+      </div>
     </div>
   );
 }
