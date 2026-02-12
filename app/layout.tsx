@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="min-h-screen bg-gradient-to-br from-ink via-night-900 to-night-800">
           {children}
           <footer className="mt-12 py-6 text-center text-white text-2xl font-semibold">
-            Mit Herz <span className="text-red-500 text-xl animate-heart">♥</span> Programmiert von Moritz Döppner
+            Mit <span className="text-red-500 text-xl animate-heart">♥</span> Programmiert von Moritz Döppner
           </footer>
         </div>
       </body>
