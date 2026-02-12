@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 const links = [
   { href: "/dashboard", label: "Dashboard" },
@@ -26,6 +27,13 @@ export default function Sidebar({
   onClose: () => void;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const [showAdminPrompt, setShowAdminPrompt] = useState(false);
+  const [adminPassword, setAdminPassword] = useState("");
+  const [adminError, setAdminError] = useState("");
+  const [pendingHref, setPendingHref] = useState<string | null>(null);
+
+  const adminLinks = links.filter((link) => link.href.startsWith("/admin"));
 
   return (
     <>
@@ -55,22 +63,87 @@ export default function Sidebar({
         <nav className="flex flex-col gap-2">
           {links
             .filter((link) => (link.href.startsWith("/admin") ? isAdmin : true))
-            .map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={onClose}
-                className={`rounded-xl px-4 py-2 transition ${
-                  pathname.startsWith(link.href)
-                    ? "bg-night-700 text-white shadow-neon"
-                    : "text-night-200 hover:bg-night-800"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            .map((link) => {
+              const isAdminLink = link.href.startsWith("/admin");
+              const isActive =
+                link.href === "/admin" ? pathname === "/admin" : pathname.startsWith(link.href);
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={(event) => {
+                    if (!isAdminLink) {
+                      onClose();
+                      return;
+                    }
+                    event.preventDefault();
+                    setAdminError("");
+                    setAdminPassword("");
+                    setPendingHref(link.href);
+                    setShowAdminPrompt(true);
+                  }}
+                  className={`rounded-xl px-4 py-2 transition ${
+                    isActive ? "bg-night-700 text-white shadow-neon" : "text-night-200 hover:bg-night-800"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
         </nav>
       </aside>
+      {showAdminPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="bg-ink border border-night-800 rounded-xl p-6 w-full max-w-sm grid gap-4">
+            <div className="text-lg font-semibold">Admin Passwort</div>
+            <input
+              type="password"
+              placeholder="Admin Passwort"
+              value={adminPassword}
+              onChange={(event) => setAdminPassword(event.target.value)}
+              autoFocus
+              required
+            />
+            {adminError && <div className="text-red-400 text-sm">{adminError}</div>}
+            <div className="flex gap-3 justify-end">
+              <button
+                className="rounded-pill px-4 py-2 border border-night-600"
+                type="button"
+                onClick={() => setShowAdminPrompt(false)}
+              >
+                Abbrechen
+              </button>
+              <button
+                className="rounded-pill px-4 py-2 bg-night-700"
+                type="button"
+                onClick={async () => {
+                  if (!adminPassword.trim()) {
+                    setAdminError("Admin Passwort erforderlich");
+                    return;
+                  }
+                  const response = await fetch("/api/admin/verify", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ password: adminPassword })
+                  });
+                  if (!response.ok) {
+                    const data = await response.json();
+                    setAdminError(data.message || "Admin Passwort falsch");
+                    return;
+                  }
+                  const target = pendingHref ?? adminLinks[0]?.href ?? "/admin";
+                  setShowAdminPrompt(false);
+                  onClose();
+                  router.push(target);
+                }}
+              >
+                Oeffnen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
