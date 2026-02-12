@@ -12,6 +12,7 @@ const links = [
   { href: "/profile", label: "Profil" },
   { href: "/admin", label: "Admin" },
   { href: "/admin/users", label: "Benutzer" },
+  { href: "/admin/changelog", label: "Changelog" },
   { href: "/admin/logs", label: "Audit Log" }
 ];
 

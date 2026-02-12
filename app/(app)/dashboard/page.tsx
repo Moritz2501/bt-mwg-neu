@@ -1,7 +1,6 @@
 import Section from "@/components/Section";
 import { prisma } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
-import ChangelogEditor from "@/components/admin/ChangelogEditor";
 
 export default async function DashboardPage() {
   const user = await requireAuth();
@@ -74,11 +73,6 @@ export default async function DashboardPage() {
           )}
         </Section>
       </div>
-      {user.role === "admin" && (
-        <Section title="Changelog (Admin)">
-          <ChangelogEditor />
-        </Section>
-      )}
     </div>
   );
 }

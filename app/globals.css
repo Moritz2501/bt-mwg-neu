@@ -15,7 +15,11 @@ input, textarea, select {
 }
 
 button {
-  @apply rounded-pill;
+  @apply rounded-pill inline-flex items-center justify-center text-center;
+}
+
+a.rounded-pill {
+  @apply inline-flex items-center justify-center text-center;
 }
 
 @keyframes heartPulse {
