@@ -42,9 +42,10 @@ export default function ChangelogEditor() {
       return;
     }
 
+    const created = await response.json();
+    setEntries((prev) => [created, ...prev]);
     setTitle("");
     setBody("");
-    load();
   }
 
   async function removeEntry(id: string) {
