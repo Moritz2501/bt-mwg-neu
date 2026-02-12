@@ -17,10 +17,10 @@ export default function Topbar({
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleMenu}
-          className="rounded-pill px-4 py-2 bg-glow text-ink font-semibold shadow-neon"
+          className="rounded-pill px-4 py-2 bg-white text-ink font-semibold shadow"
           type="button"
         >
-          Menü
+          Menü ☰
         </button>
         <div className="text-sm text-night-200">Willkommen, {username}</div>
       </div>
