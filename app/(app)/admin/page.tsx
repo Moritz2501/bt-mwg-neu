@@ -13,7 +13,7 @@ export default async function AdminPage() {
             Benutzerverwaltung
           </Link>
           <Link className="rounded-pill px-4 py-2 border border-night-600" href="/admin/logs">
-            Admin Log
+            Audit Log
           </Link>
         </div>
       </div>

@@ -3,9 +3,10 @@ import bcrypt from "bcryptjs";
 import { adminVerifySchema } from "@/lib/validation";
 import { requireAdmin, getAdminVerifiedCookieOptions, ADMIN_COOKIE } from "@/lib/auth";
 import { rateLimit } from "@/lib/rateLimit";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
-  await requireAdmin();
+  const adminUser = await requireAdmin();
   const ip = request.headers.get("x-forwarded-for") || "local";
   const limit = rateLimit(`admin:${ip}`, 5, 1000 * 60 * 10);
   if (!limit.ok) {
@@ -31,6 +32,11 @@ export async function POST(request: Request) {
   if (!ok) {
     return NextResponse.json({ message: "Admin Passwort falsch" }, { status: 401 });
   }
+
+  await writeAdminLog({
+    actorId: adminUser.id,
+    action: "admin_verify"
+  });
 
   const response = NextResponse.json({ ok: true });
   response.cookies.set(ADMIN_COOKIE, "yes", getAdminVerifiedCookieOptions());

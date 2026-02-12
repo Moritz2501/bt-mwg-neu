@@ -10,7 +10,9 @@ const links = [
   { href: "/events", label: "Events" },
   { href: "/requests", label: "Anfragen" },
   { href: "/profile", label: "Profil" },
-  { href: "/admin", label: "Admin" }
+  { href: "/admin", label: "Admin" },
+  { href: "/admin/users", label: "Benutzer" },
+  { href: "/admin/logs", label: "Audit Log" }
 ];
 
 export default function Sidebar({

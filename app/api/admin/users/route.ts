@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { userCreateSchema } from "@/lib/validation";
 import { hashPassword } from "@/lib/password";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function GET() {
   await requireAdmin();
@@ -15,8 +16,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const adminUser = await requireAdmin();
-
-  const prismaAny = prisma as any;
 
   const body = await request.json();
   const parsed = userCreateSchema.safeParse(body);
@@ -35,13 +34,11 @@ export async function POST(request: Request) {
     select: { id: true, username: true, role: true, active: true }
   });
 
-  await prismaAny.adminLog.create({
-    data: {
-      adminId: adminUser.id,
-      action: "create_user",
-      targetUserId: user.id,
-      details: `Created user ${user.username}`
-    }
+  await writeAdminLog({
+    actorId: adminUser.id,
+    action: "create_user",
+    targetUserId: user.id,
+    details: `Created user ${user.username}`
   });
 
   return NextResponse.json(user);

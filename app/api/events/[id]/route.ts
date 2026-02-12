@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { eventSchema } from "@/lib/validation";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function GET(_request: Request, { params }: { params: { id: string } }) {
   const user = await getSessionUser();
@@ -59,6 +60,12 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     include: { checklist: true, equipment: true }
   });
 
+  await writeAdminLog({
+    actorId: user.id,
+    action: "event_update",
+    details: { eventId: event.id, name: event.name }
+  });
+
   return NextResponse.json(event);
 }
 
@@ -67,5 +74,10 @@ export async function DELETE(_request: Request, { params }: { params: { id: stri
   if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
   await prisma.event.delete({ where: { id: params.id } });
+  await writeAdminLog({
+    actorId: user.id,
+    action: "event_delete",
+    details: { eventId: params.id }
+  });
   return NextResponse.json({ ok: true });
 }

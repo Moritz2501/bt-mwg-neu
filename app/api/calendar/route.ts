@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { calendarEntrySchema } from "@/lib/validation";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function GET(request: Request) {
   const user = await getSessionUser();
@@ -42,6 +43,12 @@ export async function POST(request: Request) {
       category: parsed.data.category as any,
       assignedUsers: { connect: parsed.data.assignedUserIds.map((id) => ({ id })) }
     }
+  });
+
+  await writeAdminLog({
+    actorId: user.id,
+    action: "calendar_create",
+    details: { entryId: entry.id, title: entry.title }
   });
 
   return NextResponse.json(entry);

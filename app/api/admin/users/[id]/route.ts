@@ -2,11 +2,10 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { adminUserUpdateSchema } from "@/lib/validation";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   const adminUser = await requireAdmin();
-
-  const prismaAny = prisma as any;
 
   const body = await request.json();
   const parsed = adminUserUpdateSchema.safeParse(body);
@@ -22,13 +21,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     select: { id: true, username: true, role: true, active: true }
   });
 
-  await prismaAny.adminLog.create({
-    data: {
-      adminId: adminUser.id,
-      action: "update_user",
-      targetUserId: user.id,
-      details: JSON.stringify(parsed.data)
-    }
+  await writeAdminLog({
+    actorId: adminUser.id,
+    action: "update_user",
+    targetUserId: user.id,
+    details: parsed.data
   });
 
   return NextResponse.json(user);
@@ -37,16 +34,12 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
   const adminUser = await requireAdmin();
 
-  const prismaAny = prisma as any;
-
   await prisma.user.delete({ where: { id: params.id } });
-  await prismaAny.adminLog.create({
-    data: {
-      adminId: adminUser.id,
-      action: "delete_user",
-      targetUserId: params.id,
-      details: "Deleted user"
-    }
+  await writeAdminLog({
+    actorId: adminUser.id,
+    action: "delete_user",
+    targetUserId: params.id,
+    details: "Deleted user"
   });
   return NextResponse.json({ ok: true });
 }

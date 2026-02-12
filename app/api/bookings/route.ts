@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { bookingSchema } from "@/lib/validation";
 import { prisma } from "@/lib/db";
 import { rateLimit } from "@/lib/rateLimit";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for") || "local";
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  await prisma.bookingRequest.create({
+  const booking = await prisma.bookingRequest.create({
     data: {
       requesterName: parsed.data.requesterName,
       email: parsed.data.email,
@@ -42,6 +43,16 @@ export async function POST(request: Request) {
       techNeedsText: parsed.data.techNeedsText ?? null,
       budget: parsed.data.budget ?? null,
       notes: parsed.data.notes ?? null
+    }
+  });
+
+  await writeAdminLog({
+    actorName: `public:${parsed.data.requesterName}`,
+    action: "booking_request_create",
+    details: {
+      bookingId: booking.id,
+      eventTitle: booking.eventTitle,
+      email: booking.email
     }
   });
 

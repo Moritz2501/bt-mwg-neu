@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { requestCommentSchema } from "@/lib/validation";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function POST(request: Request, { params }: { params: { id: string } }) {
   const user = await getSessionUser();
@@ -19,6 +20,12 @@ export async function POST(request: Request, { params }: { params: { id: string 
       userId: user.id,
       text: parsed.data.text
     }
+  });
+
+  await writeAdminLog({
+    actorId: user.id,
+    action: "request_comment",
+    details: { requestId: params.id, commentId: comment.id }
   });
 
   return NextResponse.json(comment);

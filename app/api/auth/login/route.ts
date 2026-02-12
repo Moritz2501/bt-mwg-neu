@@ -12,6 +12,7 @@ import {
   SESSION_COOKIE
 } from "@/lib/auth";
 import { rateLimit } from "@/lib/rateLimit";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for") || "local";
@@ -40,6 +41,10 @@ export async function POST(request: Request) {
   await destroySessionByToken(existingToken);
 
   const session = await createSession(user.id);
+  await writeAdminLog({
+    actorId: user.id,
+    action: "login"
+  });
   const response = NextResponse.json({ ok: true });
   response.cookies.set(SESSION_COOKIE, session.token, getSessionCookieOptions(session.expiresAt));
   response.cookies.set(ADMIN_COOKIE, "", getExpiredCookieOptions());

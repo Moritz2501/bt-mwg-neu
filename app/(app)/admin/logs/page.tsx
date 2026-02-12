@@ -9,7 +9,7 @@ export default async function AdminLogsPage() {
     return (
       <div className="grid gap-6">
         <div className="text-night-300 text-sm">
-          Admin Passwort erforderlich, um das Log zu sehen.
+          Admin Passwort erforderlich, um das Audit Log zu sehen.
         </div>
         <AdminVerify />
       </div>
@@ -22,14 +22,14 @@ export default async function AdminLogsPage() {
     orderBy: { createdAt: "desc" },
     take: 50,
     include: {
-      admin: { select: { username: true } },
+      admin: { select: { username: true, role: true } },
       targetUser: { select: { username: true } }
     }
   });
 
   return (
     <div className="bg-ink/70 border border-night-800 rounded-xl p-6">
-      <h1 className="text-2xl font-semibold mb-4">Admin Log</h1>
+      <h1 className="text-2xl font-semibold mb-4">Audit Log</h1>
       <ul className="space-y-2">
         {logs.map((log: any) => (
           <li key={log.id} className="border border-night-800 rounded-xl p-3">
@@ -38,7 +38,7 @@ export default async function AdminLogsPage() {
             </div>
             <div className="font-semibold">{log.action}</div>
             <div className="text-night-300 text-sm">
-              Admin: {log.admin.username}
+              Akteur: {log.admin?.username ?? log.actorName ?? "Unbekannt"}
               {log.targetUser ? ` | Ziel: ${log.targetUser.username}` : ""}
             </div>
             {log.details && <div className="text-night-400 text-xs">{log.details}</div>}

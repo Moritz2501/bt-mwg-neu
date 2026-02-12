@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { timeEntrySchema } from "@/lib/validation";
 import { minutesBetween } from "@/lib/time";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -32,6 +33,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Bereits gestartet" }, { status: 400 });
     }
     const entry = await prisma.timeEntry.create({ data: { userId: user.id, start: new Date() } });
+    await writeAdminLog({
+      actorId: user.id,
+      action: "time_entry_start",
+      details: { entryId: entry.id, start: entry.start }
+    });
     return NextResponse.json(entry);
   }
 
@@ -45,6 +51,11 @@ export async function POST(request: Request) {
   const entry = await prisma.timeEntry.update({
     where: { id: open.id },
     data: { end, duration }
+  });
+  await writeAdminLog({
+    actorId: user.id,
+    action: "time_entry_stop",
+    details: { entryId: entry.id, duration: entry.duration }
   });
   return NextResponse.json(entry);
 }

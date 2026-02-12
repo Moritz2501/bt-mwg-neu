@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { eventSchema } from "@/lib/validation";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function GET(request: Request) {
   const user = await getSessionUser();
@@ -54,6 +55,12 @@ export async function POST(request: Request) {
         }))
       }
     }
+  });
+
+  await writeAdminLog({
+    actorId: user.id,
+    action: "event_create",
+    details: { eventId: event.id, name: event.name }
   });
 
   return NextResponse.json(event);

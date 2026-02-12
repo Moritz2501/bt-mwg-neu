@@ -123,12 +123,13 @@ model RequestComment {
 
 model AdminLog {
   id           String   @id @default(cuid())
-  adminId      String
+  adminId      String?
+  actorName    String?
   action       String
   targetUserId String?
   details      String?
   createdAt    DateTime @default(now())
-  admin        User     @relation("AdminLogActor", fields: [adminId], references: [id], onDelete: Cascade)
+  admin        User?    @relation("AdminLogActor", fields: [adminId], references: [id], onDelete: Cascade)
   targetUser   User?    @relation("AdminLogTarget", fields: [targetUserId], references: [id])
   @@index([adminId, createdAt])
 }

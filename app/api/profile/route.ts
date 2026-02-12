@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { profileUpdateSchema } from "@/lib/validation";
 import { hashPassword } from "@/lib/password";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function PUT(request: Request) {
   const user = await getSessionUser();
@@ -22,6 +23,15 @@ export async function PUT(request: Request) {
     where: { id: user.id },
     data,
     select: { id: true, username: true, role: true, active: true }
+  });
+
+  await writeAdminLog({
+    actorId: user.id,
+    action: "profile_update",
+    details: {
+      usernameChanged: Boolean(parsed.data.username),
+      passwordChanged: Boolean(parsed.data.password)
+    }
   });
 
   return NextResponse.json(updated);

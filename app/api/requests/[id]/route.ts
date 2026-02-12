@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { requestStatusSchema } from "@/lib/validation";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function GET(_request: Request, { params }: { params: { id: string } }) {
   const user = await getSessionUser();
@@ -34,6 +35,16 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
   });
 
+  await writeAdminLog({
+    actorId: user.id,
+    action: "request_update",
+    details: {
+      requestId: updated.id,
+      status: updated.status,
+      assignedToUserId: updated.assignedToUserId
+    }
+  });
+
   if (parsed.data.internalNote) {
     await prisma.requestComment.create({
       data: {
@@ -41,6 +52,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         userId: user.id,
         text: parsed.data.internalNote
       }
+    });
+    await writeAdminLog({
+      actorId: user.id,
+      action: "request_internal_note",
+      details: { requestId: params.id }
     });
   }
 
@@ -52,5 +68,10 @@ export async function DELETE(_request: Request, { params }: { params: { id: stri
   if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
   await prisma.bookingRequest.delete({ where: { id: params.id } });
+  await writeAdminLog({
+    actorId: user.id,
+    action: "request_delete",
+    details: { requestId: params.id }
+  });
   return NextResponse.json({ ok: true });
 }

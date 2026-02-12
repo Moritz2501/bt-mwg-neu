@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getSessionUser } from "@/lib/auth";
 import { calendarEntrySchema } from "@/lib/validation";
+import { writeAdminLog } from "@/lib/audit";
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   const user = await getSessionUser();
@@ -29,6 +30,12 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
   });
 
+  await writeAdminLog({
+    actorId: user.id,
+    action: "calendar_update",
+    details: { entryId: entry.id, title: entry.title }
+  });
+
   return NextResponse.json(entry);
 }
 
@@ -37,5 +44,10 @@ export async function DELETE(_request: Request, { params }: { params: { id: stri
   if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
   await prisma.calendarEntry.delete({ where: { id: params.id } });
+  await writeAdminLog({
+    actorId: user.id,
+    action: "calendar_delete",
+    details: { entryId: params.id }
+  });
   return NextResponse.json({ ok: true });
 }
