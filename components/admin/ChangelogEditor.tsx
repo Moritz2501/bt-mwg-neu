@@ -84,7 +84,11 @@ export default function ChangelogEditor() {
                <div className="flex items-start justify-between gap-3">
                  <div>
                    <div className="font-semibold">{entry.title}</div>
-                   {entry.body && <div className="text-night-300 text-sm mt-1">{entry.body}</div>}
+                  {entry.body && (
+                    <div className="text-night-300 text-sm mt-1 whitespace-pre-line">
+                      {entry.body}
+                    </div>
+                  )}
                    <div className="text-night-400 text-xs mt-2">
                      {new Date(entry.createdAt).toLocaleString("de-DE")}
                    </div>

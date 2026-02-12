@@ -33,7 +33,11 @@ export default async function LandingPage() {
                 {changelog.map((entry: any) => (
                   <div key={entry.id} className="border border-night-800 rounded-xl p-4">
                     <div className="font-semibold">{entry.title}</div>
-                    {entry.body && <div className="text-night-300 text-sm mt-1">{entry.body}</div>}
+                    {entry.body && (
+                      <div className="text-night-300 text-sm mt-1 whitespace-pre-line">
+                        {entry.body}
+                      </div>
+                    )}
                     <div className="text-night-400 text-xs mt-2">
                       {entry.createdAt.toLocaleString("de-DE")}
                     </div>
