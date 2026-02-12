@@ -78,7 +78,7 @@ export default function CalendarPage() {
   }
 
   async function removeEntry(id: string) {
-    if (!confirm("Termin wirklich loeschen?")) return;
+    if (!confirm("Termin wirklich löschen?")) return;
     await fetch(`/api/calendar/${id}`, { method: "DELETE" });
     load();
   }
@@ -112,7 +112,7 @@ export default function CalendarPage() {
                         onClick={() => removeEntry(entry.id)}
                         type="button"
                       >
-                        Loeschen
+                        Löschen
                       </button>
                     </div>
                     <div className="text-night-300 text-xs">

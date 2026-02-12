@@ -55,7 +55,7 @@ export default function RequestDetailPage() {
   }
 
   async function removeRequest() {
-    if (!confirm("Anfrage wirklich loeschen?")) return;
+    if (!confirm("Anfrage wirklich löschen?")) return;
     await fetch(`/api/requests/${requestId}`, { method: "DELETE" });
     router.push("/requests");
   }
@@ -72,7 +72,7 @@ export default function RequestDetailPage() {
             onClick={removeRequest}
             type="button"
           >
-            Loeschen
+            Löschen
           </button>
         </div>
         <div className="text-night-300 break-words">
@@ -86,7 +86,7 @@ export default function RequestDetailPage() {
         <div className="flex flex-wrap gap-2 mt-4">
           {[
             { label: "Neu", value: "neu" },
-            { label: "Pruefung", value: "in_pruefung" },
+            { label: "Prüfung", value: "in_prüfung" },
             { label: "Angenommen", value: "angenommen" },
             { label: "Abgelehnt", value: "abgelehnt" }
           ].map((item) => (
