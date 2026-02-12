@@ -59,13 +59,15 @@ export default function RequestDetailPage() {
     <div className="grid gap-6">
       <div className="bg-ink/70 border border-night-800 rounded-xl p-6">
         <h1 className="text-2xl font-semibold">{request.eventTitle}</h1>
-        <div className="text-night-300">{request.requesterName} ({request.email})</div>
+        <div className="text-night-300 break-words">
+          {request.requesterName} ({request.email})
+        </div>
         <div className="text-night-400 text-sm">
           {new Date(request.start).toLocaleString("de-DE")} - {new Date(request.end).toLocaleString("de-DE")}
         </div>
         <div className="text-night-300">Ort: {request.location}</div>
         {request.notes && <div className="text-night-200 mt-2">{request.notes}</div>}
-        <div className="flex gap-2 mt-4">
+        <div className="flex flex-wrap gap-2 mt-4">
           {[
             { label: "Neu", value: "neu" },
             { label: "Pruefung", value: "in_pruefung" },
@@ -97,9 +99,9 @@ export default function RequestDetailPage() {
             </li>
           ))}
         </ul>
-        <form onSubmit={addComment} className="mt-4 flex gap-2">
+        <form onSubmit={addComment} className="mt-4 flex flex-col sm:flex-row gap-2">
           <input
-            className="flex-1"
+            className="flex-1 min-w-0"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="Interner Kommentar"
