@@ -17,7 +17,7 @@ export default function Topbar({
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleMenu}
-          className="rounded-pill px-4 py-2 bg-white text-ink font-semibold shadow"
+          className="rounded-pill px-4 py-2 bg-night-700 text-night-100 border border-night-500 shadow-sm"
           type="button"
         >
           Menü ☰

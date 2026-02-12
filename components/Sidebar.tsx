@@ -35,8 +35,8 @@ export default function Sidebar({
         />
       )}
       <aside
-        className={`fixed right-0 top-0 h-full w-72 bg-ink/90 border-l border-night-800 p-6 gap-6 z-50 flex flex-col transition-transform ${
-          open ? "translate-x-0" : "translate-x-full"
+        className={`fixed left-0 top-0 h-full w-72 bg-ink/90 border-r border-night-800 p-6 gap-6 z-50 flex flex-col transition-transform ${
+          open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex items-center justify-between">
