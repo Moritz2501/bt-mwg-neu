@@ -5,7 +5,7 @@ CREATE TABLE "User" (
     "passwordHash" TEXT NOT NULL,
     "role" TEXT NOT NULL DEFAULT 'member',
     "active" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable
@@ -13,7 +13,7 @@ CREATE TABLE "Session" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "token" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "expiresAt" DATETIME NOT NULL,
+    "expiresAt" TIMESTAMP NOT NULL,
     CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -21,8 +21,8 @@ CREATE TABLE "Session" (
 CREATE TABLE "TimeEntry" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "userId" TEXT NOT NULL,
-    "start" DATETIME NOT NULL,
-    "end" DATETIME,
+    "start" TIMESTAMP NOT NULL,
+    "end" TIMESTAMP,
     "duration" INTEGER,
     CONSTRAINT "TimeEntry_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -31,8 +31,8 @@ CREATE TABLE "TimeEntry" (
 CREATE TABLE "CalendarEntry" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
-    "start" DATETIME NOT NULL,
-    "end" DATETIME NOT NULL,
+    "start" TIMESTAMP NOT NULL,
+    "end" TIMESTAMP NOT NULL,
     "location" TEXT NOT NULL,
     "notes" TEXT,
     "category" TEXT NOT NULL
@@ -42,8 +42,8 @@ CREATE TABLE "CalendarEntry" (
 CREATE TABLE "Event" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
-    "start" DATETIME NOT NULL,
-    "end" DATETIME NOT NULL,
+    "start" TIMESTAMP NOT NULL,
+    "end" TIMESTAMP NOT NULL,
     "venue" TEXT NOT NULL,
     "contact" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'geplant',
@@ -79,8 +79,8 @@ CREATE TABLE "BookingRequest" (
     "email" TEXT NOT NULL,
     "phone" TEXT,
     "eventTitle" TEXT NOT NULL,
-    "start" DATETIME NOT NULL,
-    "end" DATETIME NOT NULL,
+    "start" TIMESTAMP NOT NULL,
+    "end" TIMESTAMP NOT NULL,
     "location" TEXT NOT NULL,
     "audienceSize" INTEGER NOT NULL,
     "techNeedsCategories" TEXT NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE "BookingRequest" (
     "notes" TEXT,
     "status" TEXT NOT NULL DEFAULT 'neu',
     "assignedToUserId" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "BookingRequest_assignedToUserId_fkey" FOREIGN KEY ("assignedToUserId") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -99,7 +99,7 @@ CREATE TABLE "RequestComment" (
     "requestId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "text" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "RequestComment_requestId_fkey" FOREIGN KEY ("requestId") REFERENCES "BookingRequest" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "RequestComment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
