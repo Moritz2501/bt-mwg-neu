@@ -13,7 +13,7 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
     start: "",
     end: "",
     location: "",
-    audienceSize: 0,
+    audienceSize: 1,
     techNeedsCategories: [] as string[],
     techNeedsText: "",
     budget: "",
@@ -86,32 +86,28 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
             required
           />
         </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          <input
-            type="datetime-local"
-            value={form.start}
-            onChange={(e) => setForm({ ...form, start: e.target.value })}
-            required
-          />
-          <input
-            type="datetime-local"
-            value={form.end}
-            onChange={(e) => setForm({ ...form, end: e.target.value })}
-            required
-          />
+        <div className="grid gap-2">
+          <div className="text-sm text-night-300">Datum/Zeitraum (TT.MM.JJJJ)</div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <input
+              type="datetime-local"
+              value={form.start}
+              onChange={(e) => setForm({ ...form, start: e.target.value })}
+              required
+            />
+            <input
+              type="datetime-local"
+              value={form.end}
+              onChange={(e) => setForm({ ...form, end: e.target.value })}
+              required
+            />
+          </div>
         </div>
         <div className="grid md:grid-cols-2 gap-4">
           <input
             placeholder="Ort"
             value={form.location}
             onChange={(e) => setForm({ ...form, location: e.target.value })}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Besucherzahl"
-            value={form.audienceSize}
-            onChange={(e) => setForm({ ...form, audienceSize: Number(e.target.value) })}
             required
           />
         </div>
