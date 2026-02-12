@@ -16,7 +16,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Ungueltige Eingaben" }, { status: 400 });
   }
 
-  const entry = await prisma.changelogEntry.create({
+  const prismaAny = prisma as any;
+  const entry = await prismaAny.changelogEntry.create({
     data: {
       title: parsed.data.title,
       body: parsed.data.body ?? null

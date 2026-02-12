@@ -16,9 +16,7 @@ export default async function AdminLogsPage() {
     );
   }
 
-  const prismaAny = prisma as any;
-
-  const logs = await prismaAny.adminLog.findMany({
+  const logs = await prisma.adminLog.findMany({
     orderBy: { createdAt: "desc" },
     take: 50,
     include: {

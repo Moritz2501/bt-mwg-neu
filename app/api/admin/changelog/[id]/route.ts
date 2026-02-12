@@ -9,7 +9,8 @@ export async function DELETE(_request: Request, { params }: { params: { id: stri
     return NextResponse.json({ message: "Admin Verifikation fehlt" }, { status: 401 });
   }
 
-  const entry = await prisma.changelogEntry.delete({ where: { id: params.id } });
+  const prismaAny = prisma as any;
+  const entry = await prismaAny.changelogEntry.delete({ where: { id: params.id } });
   await writeAdminLog({
     actorId: adminUser.id,
     action: "delete_changelog",
