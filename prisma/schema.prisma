@@ -19,6 +19,8 @@ model User {
   calendarEntries CalendarEntry[]
   requestComments RequestComment[]
   assignedRequests BookingRequest[] @relation("AssignedRequests")
+  adminLogs      AdminLog[]       @relation("AdminLogActor")
+  adminLogTargets AdminLog[]      @relation("AdminLogTarget")
 }
 
 model Session {
@@ -117,4 +119,16 @@ model RequestComment {
   request   BookingRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@index([requestId])
+}
+
+model AdminLog {
+  id           String   @id @default(cuid())
+  adminId      String
+  action       String
+  targetUserId String?
+  details      String?
+  createdAt    DateTime @default(now())
+  admin        User     @relation("AdminLogActor", fields: [adminId], references: [id], onDelete: Cascade)
+  targetUser   User?    @relation("AdminLogTarget", fields: [targetUserId], references: [id])
+  @@index([adminId, createdAt])
 }

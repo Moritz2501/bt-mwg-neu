@@ -12,6 +12,7 @@ type User = {
 export default function AdminUsersClient() {
   const [users, setUsers] = useState<User[]>([]);
   const [form, setForm] = useState({ username: "", password: "", role: "member", active: true });
+  const [edits, setEdits] = useState<Record<string, string>>({});
 
   async function load() {
     const response = await fetch("/api/admin/users");
@@ -39,6 +40,19 @@ export default function AdminUsersClient() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ active: !user.active })
+      }
+    );
+    load();
+  }
+
+  async function updateUsername(user: User) {
+    const nextName = edits[user.id]?.trim();
+    if (!nextName || nextName === user.username) return;
+    await fetch(`/api/admin/users/${user.id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: nextName })
       }
     );
     load();
@@ -93,10 +107,27 @@ export default function AdminUsersClient() {
           {users.map((user) => (
             <li key={user.id} className="border border-night-800 rounded-xl p-4 flex items-center justify-between">
               <div>
-                <div className="font-semibold">{user.username}</div>
+                <div className="font-semibold">
+                  <input
+                    className="bg-ink/60 border border-night-800 rounded-xl px-3 py-1 text-sm"
+                    value={edits[user.id] ?? user.username}
+                    onChange={(e) =>
+                      setEdits((prev) => ({
+                        ...prev,
+                        [user.id]: e.target.value
+                      }))
+                    }
+                  />
+                </div>
                 <div className="text-night-300 text-sm">{user.role}</div>
               </div>
               <div className="flex gap-2">
+                <button
+                  className="rounded-pill px-3 py-1 border border-night-600"
+                  onClick={() => updateUsername(user)}
+                >
+                  Speichern
+                </button>
                 <button className="rounded-pill px-3 py-1 border border-night-600" onClick={() => toggleActive(user)}>
                   {user.active ? "Deaktivieren" : "Aktivieren"}
                 </button>

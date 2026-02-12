@@ -84,6 +84,17 @@ export const userUpdateSchema = z.object({
   active: z.boolean().optional()
 });
 
+export const adminUserUpdateSchema = z.object({
+  username: z.string().min(3).optional(),
+  role: z.enum(["member", "admin"]).optional(),
+  active: z.boolean().optional()
+});
+
+export const profileUpdateSchema = z.object({
+  username: z.string().min(3).optional(),
+  password: z.string().min(6).optional()
+});
+
 export const requestStatusSchema = z.object({
   status: z.enum(["neu", "in_pruefung", "angenommen", "abgelehnt"]),
   assignedToUserId: z.string().optional().nullable(),
