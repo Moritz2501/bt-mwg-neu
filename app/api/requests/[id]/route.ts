@@ -46,3 +46,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
   return NextResponse.json(updated);
 }
+
+export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
+  const user = await getSessionUser();
+  if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  await prisma.bookingRequest.delete({ where: { id: params.id } });
+  return NextResponse.json({ ok: true });
+}

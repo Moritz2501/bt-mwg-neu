@@ -77,6 +77,12 @@ export default function CalendarPage() {
     load();
   }
 
+  async function removeEntry(id: string) {
+    if (!confirm("Termin wirklich loeschen?")) return;
+    await fetch(`/api/calendar/${id}`, { method: "DELETE" });
+    load();
+  }
+
   return (
     <div className="grid gap-6">
       <div className="flex items-center justify-between">
@@ -99,7 +105,16 @@ export default function CalendarPage() {
               <div className="grid gap-2">
                 {entriesByMonth[index].map((entry) => (
                   <div key={entry.id} className="border border-night-800 rounded-xl p-3">
-                    <div className="font-semibold text-sm">{entry.title}</div>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="font-semibold text-sm">{entry.title}</div>
+                      <button
+                        className="rounded-pill px-2 py-1 border border-night-700 text-xs"
+                        onClick={() => removeEntry(entry.id)}
+                        type="button"
+                      >
+                        Loeschen
+                      </button>
+                    </div>
                     <div className="text-night-300 text-xs">
                       {new Date(entry.start).toLocaleDateString("de-DE", {
                         day: "2-digit",

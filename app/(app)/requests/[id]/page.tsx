@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type Comment = { id: string; text: string; createdAt: string; user: { username: string } };
 
@@ -20,6 +20,7 @@ type RequestDetail = {
 
 export default function RequestDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const requestId = params.id as string;
   const [request, setRequest] = useState<RequestDetail | null>(null);
   const [comment, setComment] = useState("");
@@ -53,12 +54,27 @@ export default function RequestDetailPage() {
     load();
   }
 
+  async function removeRequest() {
+    if (!confirm("Anfrage wirklich loeschen?")) return;
+    await fetch(`/api/requests/${requestId}`, { method: "DELETE" });
+    router.push("/requests");
+  }
+
   if (!request) return null;
 
   return (
     <div className="grid gap-6">
       <div className="bg-ink/70 border border-night-800 rounded-xl p-6">
-        <h1 className="text-2xl font-semibold">{request.eventTitle}</h1>
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="text-2xl font-semibold">{request.eventTitle}</h1>
+          <button
+            className="rounded-pill px-3 py-1 border border-night-600"
+            onClick={removeRequest}
+            type="button"
+          >
+            Loeschen
+          </button>
+        </div>
         <div className="text-night-300 break-words">
           {request.requesterName} ({request.email})
         </div>
