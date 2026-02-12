@@ -27,7 +27,7 @@ export default function CalendarPage() {
   const months = [
     "Januar",
     "Februar",
-    "Maerz",
+    "März",
     "April",
     "Mai",
     "Juni",
@@ -88,7 +88,7 @@ export default function CalendarPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Jahreskalender {year}</h1>
-          <div className="text-night-300 text-sm">Alle Termine im Ueberblick</div>
+          <div className="text-night-300 text-sm">Alle Termine im Überblick</div>
         </div>
         <button className="rounded-pill px-5 py-2 bg-night-700" onClick={() => setShowForm(true)}>
           Neuer Eintrag

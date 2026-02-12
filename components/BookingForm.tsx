@@ -127,7 +127,7 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
         <div className="bg-ink/60 border border-night-800 rounded-xl p-4">
           <div className="text-sm text-night-300">Technikbedarf</div>
           <div className="flex flex-wrap gap-3 mt-3">
-            {["Ton", "Licht", "Buehne", "Video", "Strom", "Sonstiges"].map((cat) => (
+            {["Ton", "Licht", "Bühne", "Video", "Strom", "Sonstiges"].map((cat) => (
               <button
                 type="button"
                 key={cat}
@@ -184,7 +184,7 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
                 onClick={() => setShowPasswordModal(false)}
                 type="button"
               >
-                Schliessen
+                Schließen
               </button>
             </div>
             <form onSubmit={confirmSubmit} className="grid gap-4">

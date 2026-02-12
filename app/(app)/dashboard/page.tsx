@@ -27,7 +27,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="grid gap-6">
-      <Section title="Uebersicht">
+      <Section title="Übersicht">
         <div className="grid md:grid-cols-3 gap-4">
           <div className="bg-night-800/70 rounded-xl p-4">
             <div className="text-night-300 text-sm">Team</div>
@@ -59,7 +59,7 @@ export default async function DashboardPage() {
             </div>
           )}
         </Section>
-        <Section title="Naechste Termine">
+        <Section title="Nächste Termine">
           {nextEntries.length === 0 ? (
             <div className="text-night-300">Keine Termine geplant.</div>
           ) : (
