@@ -21,6 +21,8 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
     honey: ""
   });
   const [error, setError] = useState("");
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [submitPassword, setSubmitPassword] = useState("");
 
   const toggleCategory = (value: string) => {
     setForm((prev) => ({
@@ -31,17 +33,15 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
     }));
   };
 
-  async function onSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    setError("");
-
+  async function submitBooking(password: string) {
     const response = await fetch("/api/bookings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...form,
         audienceSize: Number(form.audienceSize),
-        budget: form.budget ? Number(form.budget) : null
+        budget: form.budget ? Number(form.budget) : null,
+        submitPassword: password
       })
     });
 
@@ -52,6 +52,18 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
     }
 
     router.push("/book/success");
+  }
+
+  async function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setError("");
+    setShowPasswordModal(true);
+  }
+
+  async function confirmSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setError("");
+    await submitBooking(submitPassword);
   }
 
   return (
@@ -162,6 +174,35 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
           Anfrage senden
         </button>
       </form>
+      {showPasswordModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+          <div className="w-full max-w-md bg-ink border border-night-800 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-lg font-semibold">Passwort erforderlich</div>
+              <button
+                className="rounded-pill px-3 py-1 border border-night-600"
+                onClick={() => setShowPasswordModal(false)}
+                type="button"
+              >
+                Schliessen
+              </button>
+            </div>
+            <form onSubmit={confirmSubmit} className="grid gap-4">
+              <input
+                type="password"
+                placeholder="Passwort"
+                value={submitPassword}
+                onChange={(e) => setSubmitPassword(e.target.value)}
+                required
+              />
+              {error && <div className="text-red-400">{error}</div>}
+              <button className="rounded-pill px-5 py-2 bg-night-700" type="submit">
+                Anfrage absenden
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

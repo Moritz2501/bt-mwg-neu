@@ -1,9 +1,11 @@
 import Section from "@/components/Section";
 import { prisma } from "@/lib/db";
-import { requireAuth } from "@/lib/auth";
+import { requireAuth, isAdminVerified } from "@/lib/auth";
+import AdminVerify from "@/components/admin/AdminVerify";
+import ChangelogEditor from "@/components/admin/ChangelogEditor";
 
 export default async function DashboardPage() {
-  await requireAuth();
+  const user = await requireAuth();
 
   const now = new Date();
   const [users, events, requests, latestRequests, nextEntries] = await Promise.all([
@@ -20,6 +22,8 @@ export default async function DashboardPage() {
       take: 2
     })
   ]);
+
+  const verified = user.role === "admin" && isAdminVerified();
 
   return (
     <div className="grid gap-6">
@@ -73,6 +77,20 @@ export default async function DashboardPage() {
           )}
         </Section>
       </div>
+      {user.role === "admin" && (
+        <Section title="Changelog (Admin)">
+          {verified ? (
+            <ChangelogEditor />
+          ) : (
+            <div className="grid gap-4">
+              <div className="text-night-300 text-sm">
+                Admin Passwort erforderlich, um den Changelog zu bearbeiten.
+              </div>
+              <AdminVerify />
+            </div>
+          )}
+        </Section>
+      )}
     </div>
   );
 }

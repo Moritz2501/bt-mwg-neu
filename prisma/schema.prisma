@@ -132,3 +132,11 @@ model AdminLog {
   targetUser   User?    @relation("AdminLogTarget", fields: [targetUserId], references: [id])
   @@index([adminId, createdAt])
 }
+
+model ChangelogEntry {
+  id        String   @id @default(cuid())
+  title     String
+  body      String?
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+}

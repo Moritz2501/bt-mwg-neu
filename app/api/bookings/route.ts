@@ -16,6 +16,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Ungueltige Daten" }, { status: 400 });
   }
 
+  const requiredPassword = process.env.BOOKING_SUBMIT_PASSWORD;
+  if (!requiredPassword) {
+    return NextResponse.json({ message: "Passwort nicht konfiguriert" }, { status: 500 });
+  }
+  if (!parsed.data.submitPassword || parsed.data.submitPassword !== requiredPassword) {
+    return NextResponse.json({ message: "Passwort falsch" }, { status: 401 });
+  }
+
   if (parsed.data.honey) {
     return NextResponse.json({ ok: true });
   }

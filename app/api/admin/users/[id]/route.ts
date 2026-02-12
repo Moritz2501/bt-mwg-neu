@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireAdmin, isAdminVerified } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import { adminUserUpdateSchema } from "@/lib/validation";
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   const adminUser = await requireAdmin();
-  if (!isAdminVerified()) {
-    return NextResponse.json({ message: "Admin Verifikation fehlt" }, { status: 401 });
-  }
 
   const prismaAny = prisma as any;
 
@@ -39,9 +36,6 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
 export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
   const adminUser = await requireAdmin();
-  if (!isAdminVerified()) {
-    return NextResponse.json({ message: "Admin Verifikation fehlt" }, { status: 401 });
-  }
 
   const prismaAny = prisma as any;
 

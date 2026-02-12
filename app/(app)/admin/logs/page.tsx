@@ -1,11 +1,19 @@
 import { prisma } from "@/lib/db";
 import { requireAdmin, isAdminVerified } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import AdminVerify from "@/components/admin/AdminVerify";
 
 export default async function AdminLogsPage() {
   await requireAdmin();
-  if (!isAdminVerified()) {
-    redirect("/admin");
+  const verified = isAdminVerified();
+  if (!verified) {
+    return (
+      <div className="grid gap-6">
+        <div className="text-night-300 text-sm">
+          Admin Passwort erforderlich, um das Log zu sehen.
+        </div>
+        <AdminVerify />
+      </div>
+    );
   }
 
   const prismaAny = prisma as any;

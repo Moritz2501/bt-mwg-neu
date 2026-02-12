@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { requireAdmin, isAdminVerified } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import { userCreateSchema } from "@/lib/validation";
 import { hashPassword } from "@/lib/password";
 
 export async function GET() {
   await requireAdmin();
-  if (!isAdminVerified()) {
-    return NextResponse.json({ message: "Admin Verifikation fehlt" }, { status: 401 });
-  }
 
   const users = await prisma.user.findMany({
     select: { id: true, username: true, role: true, active: true }
@@ -18,9 +15,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const adminUser = await requireAdmin();
-  if (!isAdminVerified()) {
-    return NextResponse.json({ message: "Admin Verifikation fehlt" }, { status: 401 });
-  }
 
   const prismaAny = prisma as any;
 

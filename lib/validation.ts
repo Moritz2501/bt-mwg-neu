@@ -63,7 +63,8 @@ export const bookingSchema = z.object({
   techNeedsText: z.string().optional().nullable(),
   budget: z.number().int().optional().nullable(),
   notes: z.string().optional().nullable(),
-  honey: z.string().optional()
+  honey: z.string().optional(),
+  submitPassword: z.string().optional()
 });
 
 export const adminVerifySchema = z.object({
@@ -103,4 +104,9 @@ export const requestStatusSchema = z.object({
 
 export const requestCommentSchema = z.object({
   text: z.string().min(2)
+});
+
+export const changelogSchema = z.object({
+  title: z.string().min(2),
+  body: z.string().optional().nullable()
 });
