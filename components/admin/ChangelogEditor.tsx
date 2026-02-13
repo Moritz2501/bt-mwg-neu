@@ -13,7 +13,6 @@ export default function ChangelogEditor() {
   const [entries, setEntries] = useState<ChangelogEntry[]>([]);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
   const [error, setError] = useState("");
 
   async function load() {
@@ -31,15 +30,10 @@ export default function ChangelogEditor() {
     event.preventDefault();
     setError("");
 
-    if (!adminPassword.trim()) {
-      setError("Admin Passwort erforderlich");
-      return;
-    }
-
     const response = await fetch("/api/admin/changelog", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, body, adminPassword })
+      body: JSON.stringify({ title, body })
     });
 
     if (!response.ok) {
@@ -57,15 +51,10 @@ export default function ChangelogEditor() {
   async function removeEntry(id: string) {
     if (!confirm("Eintrag wirklich loeschen?")) return;
     setError("");
-    if (!adminPassword.trim()) {
-      setError("Admin Passwort erforderlich");
-      return;
-    }
     const response = await fetch(`/api/admin/changelog/${id}`,
       {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ adminPassword })
+        headers: { "Content-Type": "application/json" }
       }
     );
     if (!response.ok) {
@@ -80,13 +69,6 @@ export default function ChangelogEditor() {
     <div className="grid gap-6">
       <form onSubmit={createEntry} className="bg-ink/70 border border-night-800 rounded-xl p-6 grid gap-4">
         <div className="text-night-200 text-sm">Changelog aktualisieren</div>
-        <input
-          type="password"
-          placeholder="Admin Passwort"
-          value={adminPassword}
-          onChange={(e) => setAdminPassword(e.target.value)}
-          required
-        />
         <input
           placeholder="Titel"
           value={title}

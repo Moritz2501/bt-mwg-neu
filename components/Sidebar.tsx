@@ -13,8 +13,8 @@ const links = [
   { href: "/profile", label: "Profil" },
   { href: "/admin", label: "Admin" },
   { href: "/admin/users", label: "Benutzer" },
-  { href: "/admin/changelog", label: "Changelog" },
-  { href: "/admin/logs", label: "Audit Log" }
+  { href: "/admin/changelog", label: "Changelog", hidden: true },
+  { href: "/admin/logs", label: "Audit Log", hidden: true }
 ];
 
 export default function Sidebar({
@@ -62,6 +62,7 @@ export default function Sidebar({
         </div>
         <nav className="flex flex-col gap-2">
           {links
+            .filter((link) => !link.hidden)
             .filter((link) => (link.href.startsWith("/admin") ? isAdmin : true))
             .map((link) => {
               const isAdminLink = link.href.startsWith("/admin");

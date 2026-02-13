@@ -1,12 +1,7 @@
-import { requireAdmin, isAdminVerified } from "@/lib/auth";
-import { redirect } from "next/navigation";
+import { requireAdmin } from "@/lib/auth";
 import AdminUsersClient from "@/components/admin/AdminUsersClient";
 
 export default async function AdminUsersPage() {
   await requireAdmin();
-  if (!isAdminVerified()) {
-    redirect("/admin");
-  }
-
   return <AdminUsersClient />;
 }
