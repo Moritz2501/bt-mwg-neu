@@ -14,25 +14,27 @@ export default async function AdminLogsPage() {
   });
 
   return (
-    <div className="bg-ink/70 border border-night-800 rounded-xl p-4 sm:p-6">
+    <div className="bg-ink/70 border border-night-800 rounded-xl p-4 sm:p-6 max-w-full overflow-hidden">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h1 className="text-2xl font-semibold">Audit Log</h1>
         <Link className="rounded-pill px-4 py-2 border border-night-600" href="/admin">
           Zurueck
         </Link>
       </div>
-      <ul className="space-y-2">
+      <ul className="space-y-2 max-w-full">
         {logs.map((log: any) => (
-          <li key={log.id} className="border border-night-800 rounded-xl p-3 break-words">
+          <li key={log.id} className="border border-night-800 rounded-xl p-3 break-words max-w-full">
             <div className="text-night-200 text-sm">
               {new Date(log.createdAt).toLocaleString("de-DE")}
             </div>
             <div className="font-semibold">{log.action}</div>
-            <div className="text-night-300 text-sm">
+            <div className="text-night-300 text-sm break-words">
               Akteur: {log.admin?.username ?? log.actorName ?? "Unbekannt"}
               {log.targetUser ? ` | Ziel: ${log.targetUser.username}` : ""}
             </div>
-            {log.details && <div className="text-night-400 text-xs break-words">{log.details}</div>}
+            {log.details && (
+              <div className="text-night-400 text-xs break-all">{log.details}</div>
+            )}
           </li>
         ))}
       </ul>
