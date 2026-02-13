@@ -68,7 +68,7 @@ export default function NewEventPage() {
           type="button"
           onClick={() => router.push("/events")}
         >
-          Zurueck
+          Zurück
         </button>
       </div>
       <input
