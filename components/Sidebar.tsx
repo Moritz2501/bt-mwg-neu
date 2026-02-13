@@ -66,6 +66,9 @@ export default function Sidebar({
             .filter((link) => (link.href.startsWith("/admin") ? isAdmin : true))
             .map((link) => {
               const isAdminLink = link.href.startsWith("/admin");
+              const needsAdminPassword = ["/admin", "/admin/changelog", "/admin/logs"].includes(
+                link.href
+              );
               const isActive =
                 link.href === "/admin" ? pathname === "/admin" : pathname.startsWith(link.href);
 
@@ -74,7 +77,7 @@ export default function Sidebar({
                   key={link.href}
                   href={link.href}
                   onClick={(event) => {
-                    if (!isAdminLink) {
+                    if (!isAdminLink || !needsAdminPassword) {
                       onClose();
                       return;
                     }

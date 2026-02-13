@@ -15,7 +15,7 @@ export default function AppShell({ username, isAdmin, children }: AppShellProps)
 
   return (
     <div className="min-h-screen flex">
-      <main className="flex-1 px-6 lg:px-10 py-6">
+      <main className="flex-1 px-4 sm:px-6 lg:px-10 py-6 min-w-0">
         <Topbar username={username} onToggleMenu={() => setOpen((prev) => !prev)} />
         <div className="grid gap-6">{children}</div>
       </main>
