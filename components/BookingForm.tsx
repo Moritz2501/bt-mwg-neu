@@ -8,15 +8,13 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
   const [form, setForm] = useState({
     requesterName: "",
     email: "",
-    phone: "",
     eventTitle: "",
     start: "",
     end: "",
     location: "",
     audienceSize: 1,
     techNeedsCategories: [] as string[],
-    techNeedsText: "",
-    budget: "",
+    techNeedsOther: "",
     notes: "",
     honey: ""
   });
@@ -25,12 +23,17 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
   const [submitPassword, setSubmitPassword] = useState("");
 
   const toggleCategory = (value: string) => {
-    setForm((prev) => ({
-      ...prev,
-      techNeedsCategories: prev.techNeedsCategories.includes(value)
+    setForm((prev) => {
+      const removing = prev.techNeedsCategories.includes(value);
+      const nextCategories = removing
         ? prev.techNeedsCategories.filter((item) => item !== value)
-        : [...prev.techNeedsCategories, value]
-    }));
+        : [...prev.techNeedsCategories, value];
+      return {
+        ...prev,
+        techNeedsCategories: nextCategories,
+        techNeedsOther: removing && value === "Sonstiges" ? "" : prev.techNeedsOther
+      };
+    });
   };
 
   async function submitBooking(password: string) {
@@ -40,7 +43,7 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
       body: JSON.stringify({
         ...form,
         audienceSize: Number(form.audienceSize),
-        budget: form.budget ? Number(form.budget) : null,
+        techNeedsText: form.techNeedsOther || null,
         submitPassword: password
       })
     });
@@ -87,11 +90,6 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
         </div>
         <div className="grid md:grid-cols-2 gap-4">
           <input
-            placeholder="Telefon (optional)"
-            value={form.phone}
-            onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          />
-          <input
             placeholder="Event Titel"
             value={form.eventTitle}
             onChange={(e) => setForm({ ...form, eventTitle: e.target.value })}
@@ -101,18 +99,24 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
         <div className="grid gap-2">
           <div className="text-sm text-night-300">Datum/Zeitraum (TT.MM.JJJJ)</div>
           <div className="grid md:grid-cols-2 gap-4">
-            <input
-              type="datetime-local"
-              value={form.start}
-              onChange={(e) => setForm({ ...form, start: e.target.value })}
-              required
-            />
-            <input
-              type="datetime-local"
-              value={form.end}
-              onChange={(e) => setForm({ ...form, end: e.target.value })}
-              required
-            />
+            <label className="grid gap-2 text-sm text-night-300">
+              Beginn
+              <input
+                type="datetime-local"
+                value={form.start}
+                onChange={(e) => setForm({ ...form, start: e.target.value })}
+                required
+              />
+            </label>
+            <label className="grid gap-2 text-sm text-night-300">
+              Ende
+              <input
+                type="datetime-local"
+                value={form.end}
+                onChange={(e) => setForm({ ...form, end: e.target.value })}
+                required
+              />
+            </label>
           </div>
         </div>
         <div className="grid md:grid-cols-2 gap-4">
@@ -142,25 +146,21 @@ export default function BookingForm({ title = "Event anfragen" }: { title?: stri
               </button>
             ))}
           </div>
+          {form.techNeedsCategories.includes("Sonstiges") && (
+            <input
+              className="mt-3"
+              placeholder="Sonstiges (bitte angeben)"
+              value={form.techNeedsOther}
+              onChange={(e) => setForm({ ...form, techNeedsOther: e.target.value })}
+              required
+            />
+          )}
         </div>
-
-        <textarea
-          placeholder="Technikdetails"
-          value={form.techNeedsText}
-          onChange={(e) => setForm({ ...form, techNeedsText: e.target.value })}
-          rows={3}
-        />
         <textarea
           placeholder="Notizen"
           value={form.notes}
           onChange={(e) => setForm({ ...form, notes: e.target.value })}
           rows={3}
-        />
-        <input
-          type="number"
-          placeholder="Budget (optional)"
-          value={form.budget}
-          onChange={(e) => setForm({ ...form, budget: e.target.value })}
         />
         <input
           className="hidden"

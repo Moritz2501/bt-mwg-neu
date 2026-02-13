@@ -69,18 +69,24 @@ export default function NewEventPage() {
         required
       />
       <div className="grid md:grid-cols-2 gap-4">
-        <input
-          type="datetime-local"
-          value={form.Start}
-          onChange={(e) => setForm({ ...form, Start: e.target.value })}
-          required
-        />
-        <input
-          type="datetime-local"
-          value={form.Ende}
-          onChange={(e) => setForm({ ...form, Ende: e.target.value })}
-          required
-        />
+        <label className="grid gap-2 text-sm text-night-300">
+          Beginn
+          <input
+            type="datetime-local"
+            value={form.Start}
+            onChange={(e) => setForm({ ...form, Start: e.target.value })}
+            required
+          />
+        </label>
+        <label className="grid gap-2 text-sm text-night-300">
+          Ende
+          <input
+            type="datetime-local"
+            value={form.Ende}
+            onChange={(e) => setForm({ ...form, Ende: e.target.value })}
+            required
+          />
+        </label>
       </div>
       <input
         placeholder="Veranstaltungsort"
