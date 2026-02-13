@@ -141,7 +141,7 @@ export default function CalendarPage() {
                 className="rounded-pill px-3 py-1 border border-night-600"
                 onClick={() => setShowForm(false)}
               >
-                Schliessen
+                Schließen
               </button>
             </div>
             <form onSubmit={submit} className="grid gap-4">

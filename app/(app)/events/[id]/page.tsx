@@ -54,7 +54,7 @@ export default function EventDetailPage() {
             <div className="text-night-300 text-sm">{event.venue}</div>
           </div>
           <button className="rounded-pill px-4 py-2 border border-night-600" onClick={remove}>
-            Loeschen
+            Löschen
           </button>
         </div>
         <div className="text-night-300 mt-4">

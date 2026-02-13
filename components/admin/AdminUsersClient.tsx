@@ -135,7 +135,7 @@ export default function AdminUsersClient() {
                   {user.active ? "Deaktivieren" : "Aktivieren"}
                 </button>
                 <button className="rounded-pill px-3 py-1 border border-night-600" onClick={() => remove(user)}>
-                  Loeschen
+                  Löschen
                 </button>
               </div>
             </li>

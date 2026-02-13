@@ -18,7 +18,7 @@ export default async function AdminLogsPage() {
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h1 className="text-2xl font-semibold">Audit Log</h1>
         <Link className="rounded-pill px-4 py-2 border border-night-600" href="/admin">
-          Zurueck
+          Zurück
         </Link>
       </div>
       <ul className="space-y-2 max-w-full">

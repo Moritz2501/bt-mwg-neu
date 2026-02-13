@@ -142,7 +142,7 @@ export default function Sidebar({
                   router.push(target);
                 }}
               >
-                Oeffnen
+                Öffnen
               </button>
             </div>
           </div>

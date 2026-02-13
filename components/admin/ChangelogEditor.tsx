@@ -49,7 +49,7 @@ export default function ChangelogEditor() {
   }
 
   async function removeEntry(id: string) {
-    if (!confirm("Eintrag wirklich loeschen?")) return;
+    if (!confirm("Eintrag wirklich löschen?")) return;
     setError("");
     const response = await fetch(`/api/admin/changelog/${id}`,
       {
@@ -59,7 +59,7 @@ export default function ChangelogEditor() {
     );
     if (!response.ok) {
       const data = await response.json();
-      setError(data.message || "Fehler beim Loeschen");
+      setError(data.message || "Fehler beim Löschen");
       return;
     }
     load();
@@ -88,7 +88,7 @@ export default function ChangelogEditor() {
        </form>
 
        <div className="bg-ink/70 border border-night-800 rounded-xl p-6">
-         <div className="text-night-200 text-sm mb-4">Aktuelle Eintraege</div>
+         <div className="text-night-200 text-sm mb-4">Aktuelle Einträge</div>
          <div className="grid gap-3">
            {entries.map((entry) => (
              <div key={entry.id} className="border border-night-800 rounded-xl p-4">
@@ -109,7 +109,7 @@ export default function ChangelogEditor() {
                    onClick={() => removeEntry(entry.id)}
                    type="button"
                  >
-                   Loeschen
+                   Löschen
                  </button>
                </div>
              </div>
