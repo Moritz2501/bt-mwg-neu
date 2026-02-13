@@ -61,7 +61,16 @@ export default function NewEventPage() {
 
   return (
     <form onSubmit={submit} className="bg-ink/70 border border-night-800 rounded-xl p-6 grid gap-4">
-      <h1 className="text-2xl font-semibold">Neues Event</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-2xl font-semibold">Neues Event</h1>
+        <button
+          className="rounded-pill px-4 py-2 border border-night-600"
+          type="button"
+          onClick={() => router.push("/events")}
+        >
+          Zurueck
+        </button>
+      </div>
       <input
         placeholder="Name"
         value={form.Name}
