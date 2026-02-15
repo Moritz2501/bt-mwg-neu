@@ -15,6 +15,7 @@ export default function ChangelogEditor() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
+  const [previewDevice, setPreviewDevice] = useState<"iphone" | "ipad">("iphone");
 
   const previewEntries = [
     {
@@ -108,14 +109,59 @@ export default function ChangelogEditor() {
           </div>
 
           <div className="grid gap-2 justify-items-center">
-            <div className="w-[300px] h-[650px] rounded-[2.5rem] border-4 border-night-700 bg-night-900 p-2">
-              <div className="w-full h-full rounded-[2rem] bg-ink border border-night-800 overflow-hidden">
-                <div className="flex justify-center pt-2">
-                  <div className="h-6 w-32 rounded-full bg-night-800" />
-                </div>
-                <div className="p-4 grid gap-3">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setPreviewDevice("iphone")}
+                className={`rounded-pill px-3 py-1 border text-xs ${
+                  previewDevice === "iphone" ? "bg-night-700 border-night-700" : "border-night-600"
+                }`}
+              >
+                iPhone
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewDevice("ipad")}
+                className={`rounded-pill px-3 py-1 border text-xs ${
+                  previewDevice === "ipad" ? "bg-night-700 border-night-700" : "border-night-600"
+                }`}
+              >
+                iPad Querformat
+              </button>
+            </div>
+
+            <div
+              className={
+                previewDevice === "iphone"
+                  ? "w-[300px] h-[650px] rounded-[2.5rem] border-4 border-night-700 bg-night-900 p-2"
+                  : "w-[700px] h-[500px] rounded-[2.25rem] border-4 border-night-700 bg-night-900 p-2"
+              }
+            >
+              <div
+                className={
+                  previewDevice === "iphone"
+                    ? "w-full h-full rounded-[2rem] bg-ink border border-night-800 overflow-hidden"
+                    : "w-full h-full rounded-[1.75rem] bg-ink border border-night-800 overflow-hidden"
+                }
+              >
+                {previewDevice === "iphone" ? (
+                  <div className="flex justify-center pt-2">
+                    <div className="h-6 w-32 rounded-full bg-night-800" />
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center pt-2">
+                    <div className="h-2 w-2 rounded-full bg-night-700" />
+                  </div>
+                )}
+                <div className={previewDevice === "iphone" ? "p-4 grid gap-3" : "p-5 grid gap-3"}>
                   <div className="text-night-200 text-sm">Changelog</div>
-                  <div className="grid gap-3 max-h-[520px] overflow-y-auto no-scrollbar pr-1">
+                  <div
+                    className={
+                      previewDevice === "iphone"
+                        ? "grid gap-3 max-h-[520px] overflow-y-auto no-scrollbar pr-1"
+                        : "grid gap-3 max-h-[400px] overflow-y-auto no-scrollbar pr-1"
+                    }
+                  >
                     {previewEntries.map((entry) => (
                       <div key={entry.id} className="border border-night-800 rounded-xl p-4">
                         <div className="flex items-center justify-between gap-2">
