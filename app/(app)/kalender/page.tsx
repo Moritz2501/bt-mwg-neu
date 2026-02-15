@@ -142,7 +142,7 @@ export default function CalendarPage() {
           <div key={month} className="bg-ink/70 border border-night-800 rounded-xl p-4">
             <div className="text-night-200 font-semibold mb-3">{month}</div>
             {entriesByMonth[index].length === 0 ? (
-              <div className="text-night-300 text-2xl font-semibold text-center min-h-48 flex items-center justify-center">Es gibt gerade keine Termine.</div>
+              <div className="text-night-400 text-sm">Es gibt gerade keine Termine.</div>
             ) : (
               <div className="grid gap-2">
                 {entriesByMonth[index].map((entry) => (
