@@ -32,7 +32,7 @@ export default function EventsPage() {
       </div>
       <div className="grid gap-3">
         {events.length === 0 ? (
-          <div className="text-night-400 text-sm">Es gibt gerade keine Events.</div>
+          <div className="text-night-300 text-3xl font-semibold text-center min-h-[50vh] flex items-center justify-center">Es gibt gerade keine Events.</div>
         ) : (
           events.map((event) => (
             <Link

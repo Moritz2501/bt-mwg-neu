@@ -109,7 +109,7 @@ export default function RequestDetailPage() {
         <div className="text-night-200 text-sm mb-4">Kommentare</div>
         <ul className="space-y-2">
           {request.comments.length === 0 ? (
-            <li className="text-night-400 text-sm">Es gibt gerade keine Kommentare.</li>
+            <li className="list-none text-night-300 text-3xl font-semibold text-center min-h-[40vh] flex items-center justify-center">Es gibt gerade keine Kommentare.</li>
           ) : (
             request.comments.map((item) => (
               <li key={item.id} className="border border-night-800 rounded-xl p-3">

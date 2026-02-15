@@ -105,7 +105,7 @@ export default function AdminUsersClient() {
         <div className="text-night-200 text-sm mb-4">Benutzerliste</div>
         <ul className="space-y-2">
           {users.length === 0 ? (
-            <li className="text-night-400 text-sm">Es gibt gerade keine Benutzer.</li>
+            <li className="list-none text-night-300 text-3xl font-semibold text-center min-h-[50vh] flex items-center justify-center">Es gibt gerade keine Benutzer.</li>
           ) : (
             users.map((user) => (
               <li

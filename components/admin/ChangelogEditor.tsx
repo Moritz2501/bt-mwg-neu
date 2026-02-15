@@ -190,7 +190,7 @@ export default function ChangelogEditor() {
          <div className="text-night-200 text-sm mb-4">Aktuelle Einträge</div>
          <div className="grid gap-3">
            {entries.length === 0 ? (
-             <div className="text-night-400 text-sm">Es gibt gerade keine Changelog-Einträge.</div>
+             <div className="text-night-300 text-3xl font-semibold text-center min-h-[40vh] flex items-center justify-center">Es gibt gerade keine Changelog-Einträge.</div>
            ) : (
              entries.map((entry) => (
                <div key={entry.id} className="border border-night-800 rounded-xl p-4">

@@ -23,7 +23,7 @@ export default async function AdminLogsPage() {
       </div>
       <ul className="space-y-2 max-w-full">
         {logs.length === 0 ? (
-          <li className="text-night-400 text-sm">Es gibt gerade keine Logs.</li>
+          <li className="list-none text-night-300 text-3xl font-semibold text-center min-h-[50vh] flex items-center justify-center">Es gibt gerade keine Logs.</li>
         ) : (
           logs.map((log: any) => (
             <li key={log.id} className="border border-night-800 rounded-xl p-3 break-words max-w-full">

@@ -28,7 +28,7 @@ export default function RequestsPage() {
       <h1 className="text-2xl font-semibold">Anfragen</h1>
       <div className="grid gap-3">
         {requests.length === 0 ? (
-          <div className="text-night-400 text-sm">Es gibt gerade keine Anfragen.</div>
+          <div className="text-night-300 text-3xl font-semibold text-center min-h-[50vh] flex items-center justify-center">Es gibt gerade keine Anfragen.</div>
         ) : (
           requests.map((request) => (
             <Link

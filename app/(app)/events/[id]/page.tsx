@@ -70,7 +70,7 @@ export default function EventDetailPage() {
           <div className="text-night-200 text-sm mb-4">Checkliste</div>
           <ul className="space-y-2">
             {event.checklist.length === 0 ? (
-              <li className="text-night-400 text-sm">Es gibt gerade keine Checkliste.</li>
+              <li className="list-none text-night-300 text-3xl font-semibold text-center min-h-[40vh] flex items-center justify-center">Es gibt gerade keine Checkliste.</li>
             ) : (
               event.checklist.map((item) => (
                 <li key={item.id} className="border border-night-800 rounded-xl p-3">
@@ -85,7 +85,7 @@ export default function EventDetailPage() {
           <div className="text-night-200 text-sm mb-4">Equipment</div>
           <ul className="space-y-2">
             {event.equipment.length === 0 ? (
-              <li className="text-night-400 text-sm">Es gibt gerade kein Equipment.</li>
+              <li className="list-none text-night-300 text-3xl font-semibold text-center min-h-[40vh] flex items-center justify-center">Es gibt gerade kein Equipment.</li>
             ) : (
               event.equipment.map((item) => (
                 <li key={item.id} className="border border-night-800 rounded-xl p-3">

@@ -30,7 +30,7 @@ export default function ChangelogList() {
     <div className="mb-8 bg-ink/70 border border-night-800 rounded-xl p-6">
       <div className="text-night-200 text-sm mb-4">Changelog</div>
       {entries.length === 0 ? (
-        <div className="text-night-400 text-sm">Es gibt gerade keine Changelog-Einträge.</div>
+        <div className="text-night-300 text-3xl font-semibold text-center min-h-[50vh] flex items-center justify-center">Es gibt gerade keine Changelog-Einträge.</div>
       ) : (
         <div className="grid gap-3">
           {entries.map((entry) => (

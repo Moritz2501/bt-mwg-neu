@@ -42,7 +42,7 @@ export default async function DashboardPage() {
       <div className="grid lg:grid-cols-2 gap-6">
         <Section title="Neueste Anfragen">
           {latestRequests.length === 0 ? (
-            <div className="text-night-300">Es gibt gerade keine Anfragen.</div>
+            <div className="text-night-300 text-3xl font-semibold text-center min-h-[40vh] flex items-center justify-center">Es gibt gerade keine Anfragen.</div>
           ) : (
             <div className="grid gap-3">
               {latestRequests.map((request) => (
@@ -57,7 +57,7 @@ export default async function DashboardPage() {
         </Section>
         <Section title="Nächste Termine">
           {nextEntries.length === 0 ? (
-            <div className="text-night-300">Es gibt gerade keine Termine.</div>
+            <div className="text-night-300 text-3xl font-semibold text-center min-h-[40vh] flex items-center justify-center">Es gibt gerade keine Termine.</div>
           ) : (
             <div className="grid gap-3">
               {nextEntries.map((entry) => (

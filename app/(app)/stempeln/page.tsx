@@ -87,23 +87,21 @@ export default function TimeTrackingPage() {
       </div>
       {status && <div className="text-red-400">{status}</div>}
       <div className="bg-ink/70 border border-night-800 rounded-xl p-6">
-        <table className="w-full text-sm">
-          <thead className="text-night-300">
-            <tr>
-              <th className="text-left py-2">Start</th>
-              <th className="text-left py-2">Ende</th>
-              <th className="text-left py-2">Dauer (min)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.length === 0 ? (
-              <tr className="border-t border-night-800">
-                <td className="py-3 text-night-400" colSpan={3}>
-                  Es gibt gerade keine Stempelzeiten.
-                </td>
+        {entries.length === 0 ? (
+          <div className="text-night-300 text-3xl font-semibold text-center min-h-[50vh] flex items-center justify-center">
+            Es gibt gerade keine Stempelzeiten.
+          </div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="text-night-300">
+              <tr>
+                <th className="text-left py-2">Start</th>
+                <th className="text-left py-2">Ende</th>
+                <th className="text-left py-2">Dauer (min)</th>
               </tr>
-            ) : (
-              entries.map((entry) => (
+            </thead>
+            <tbody>
+              {entries.map((entry) => (
                 <tr key={entry.id} className="border-t border-night-800">
                   <td className="py-2">{new Date(entry.start).toLocaleString("de-DE")}</td>
                   <td className="py-2">
@@ -111,10 +109,10 @@ export default function TimeTrackingPage() {
                   </td>
                   <td className="py-2">{entry.duration ?? "-"}</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
 
       <div className="bg-ink/70 border border-night-800 rounded-xl p-6 grid gap-6">
@@ -132,7 +130,7 @@ export default function TimeTrackingPage() {
           </div>
           <div className="grid gap-2">
             {segments.length === 0 ? (
-              <div className="text-night-400 text-sm">Es gibt gerade keine Stempelzeiten.</div>
+              <div className="text-night-300 text-3xl font-semibold text-center min-h-[40vh] flex items-center justify-center">Es gibt gerade keine Stempelzeiten.</div>
             ) : (
               segments.map((user) => (
                 <div key={user.username} className="flex items-center justify-between text-sm">
@@ -153,7 +151,7 @@ export default function TimeTrackingPage() {
           <div className="text-night-200 text-sm mb-3">Leaderboard</div>
           <div className="grid gap-2">
             {segments.length === 0 ? (
-              <div className="text-night-400 text-sm">Es gibt gerade kein Leaderboard.</div>
+              <div className="text-night-300 text-3xl font-semibold text-center min-h-[40vh] flex items-center justify-center">Es gibt gerade kein Leaderboard.</div>
             ) : (
               segments.map((user, index) => (
                 <div key={user.username} className="border border-night-800 rounded-xl p-3 flex items-center justify-between">
