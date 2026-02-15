@@ -4,6 +4,30 @@ import { getSessionUser } from "@/lib/auth";
 import { requestStatusSchema } from "@/lib/validation";
 import { writeAdminLog } from "@/lib/audit";
 
+function requestMarker(requestId: string) {
+  return `[request:${requestId}]`;
+}
+
+function requestStatusMarker(status: string) {
+  return `[request-status:${status}]`;
+}
+
+function stripRequestMeta(notes: string | null | undefined) {
+  if (!notes) return "";
+  return notes
+    .replace(/\[request:[^\]]+\]/g, "")
+    .replace(/\[request-status:[^\]]+\]/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function withRequestMeta(notes: string | null | undefined, requestId: string, status: string) {
+  const cleanNotes = stripRequestMeta(notes);
+  const tags = `${requestMarker(requestId)}\n${requestStatusMarker(status)}`;
+  if (!cleanNotes) return tags;
+  return `${cleanNotes}\n\n${tags}`;
+}
+
 export async function GET(_request: Request, { params }: { params: { id: string } }) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -35,13 +59,40 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
   });
 
+  const linkedCalendarEntries = await prisma.calendarEntry.findMany({
+    where: {
+      OR: [
+        { notes: { contains: requestMarker(updated.id) } },
+        {
+          title: updated.eventTitle,
+          start: updated.start,
+          end: updated.end,
+          location: updated.location,
+          category: "show"
+        }
+      ]
+    }
+  });
+
+  await Promise.all(
+    linkedCalendarEntries.map((entry) =>
+      prisma.calendarEntry.update({
+        where: { id: entry.id },
+        data: {
+          notes: withRequestMeta(entry.notes, updated.id, updated.status)
+        }
+      })
+    )
+  );
+
   await writeAdminLog({
     actorId: user.id,
     action: "request_update",
     details: {
       requestId: updated.id,
       status: updated.status,
-      assignedToUserId: updated.assignedToUserId
+      assignedToUserId: updated.assignedToUserId,
+      updatedCalendarEntries: linkedCalendarEntries.length
     }
   });
 
@@ -67,11 +118,39 @@ export async function DELETE(_request: Request, { params }: { params: { id: stri
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-  await prisma.bookingRequest.delete({ where: { id: params.id } });
+  const bookingRequest = await prisma.bookingRequest.findUnique({ where: { id: params.id } });
+  if (!bookingRequest) return NextResponse.json({ message: "Not found" }, { status: 404 });
+
+  const marker = requestMarker(params.id);
+
+  const result = await prisma.$transaction(async (tx) => {
+    const deletedCalendarEntries = await tx.calendarEntry.deleteMany({
+      where: {
+        OR: [
+          { notes: { contains: marker } },
+          {
+            title: bookingRequest.eventTitle,
+            start: bookingRequest.start,
+            end: bookingRequest.end,
+            location: bookingRequest.location,
+            category: "show"
+          }
+        ]
+      }
+    });
+
+    await tx.bookingRequest.delete({ where: { id: params.id } });
+
+    return { deletedCalendarCount: deletedCalendarEntries.count };
+  });
+
   await writeAdminLog({
     actorId: user.id,
     action: "request_delete",
-    details: { requestId: params.id }
+    details: {
+      requestId: params.id,
+      deletedCalendarEntries: result.deletedCalendarCount
+    }
   });
   return NextResponse.json({ ok: true });
 }

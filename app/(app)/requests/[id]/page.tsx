@@ -24,9 +24,6 @@ export default function RequestDetailPage() {
   const requestId = params.id as string;
   const [request, setRequest] = useState<RequestDetail | null>(null);
   const [comment, setComment] = useState("");
-  const [isCreatingCalendarEntry, setIsCreatingCalendarEntry] = useState(false);
-  const [calendarMessage, setCalendarMessage] = useState<string | null>(null);
-  const [calendarError, setCalendarError] = useState<string | null>(null);
 
   async function load() {
     const response = await fetch(`/api/requests/${requestId}`);
@@ -44,30 +41,7 @@ export default function RequestDetailPage() {
       body: JSON.stringify({ status })
     });
     if (response.ok) {
-      setCalendarMessage(null);
-      setCalendarError(null);
       await load();
-    }
-  }
-
-  async function addToCalendar() {
-    setIsCreatingCalendarEntry(true);
-    setCalendarMessage(null);
-    setCalendarError(null);
-    try {
-      const response = await fetch(`/api/requests/${requestId}/calendar`, {
-        method: "POST"
-      });
-      const payload = await response.json().catch(() => null);
-      if (!response.ok) {
-        setCalendarError(payload?.message ?? "Kalendereintrag konnte nicht erstellt werden.");
-        return;
-      }
-      setCalendarMessage("Anfrage wurde in den Kalender eingetragen.");
-    } catch {
-      setCalendarError("Kalendereintrag konnte nicht erstellt werden.");
-    } finally {
-      setIsCreatingCalendarEntry(false);
     }
   }
 
@@ -129,20 +103,6 @@ export default function RequestDetailPage() {
             </button>
           ))}
         </div>
-        {request.status === "angenommen" ? (
-          <div className="mt-4 grid gap-2">
-            <button
-              className="rounded-pill px-4 py-2 bg-night-700 disabled:opacity-60 w-fit"
-              onClick={addToCalendar}
-              type="button"
-              disabled={isCreatingCalendarEntry}
-            >
-              {isCreatingCalendarEntry ? "Eintragen..." : "In Kalender eintragen"}
-            </button>
-            {calendarMessage ? <p className="text-sm text-emerald-400">{calendarMessage}</p> : null}
-            {calendarError ? <p className="text-sm text-red-400">{calendarError}</p> : null}
-          </div>
-        ) : null}
       </div>
 
       <div className="bg-ink/70 border border-night-800 rounded-xl p-6">

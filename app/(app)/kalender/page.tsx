@@ -10,7 +10,35 @@ type Entry = {
   location: string;
   category: string;
   notes?: string | null;
+  requestStatus?: string | null;
 };
+
+function formatRequestStatus(status: string | null | undefined) {
+  if (!status) return null;
+  if (status === "neu") return "Neu";
+  if (status === "in_pruefung") return "In Prüfung";
+  if (status === "angenommen") return "Angenommen";
+  if (status === "abgelehnt") return "Abgelehnt";
+  return status;
+}
+
+function parseRequestMeta(notes: string | null | undefined) {
+  if (!notes) return { cleanNotes: null, requestStatus: null as string | null };
+
+  const statusMatch = notes.match(/\[request-status:([^\]]+)\]/);
+  const requestStatus = statusMatch?.[1] ?? null;
+
+  const cleanNotes = notes
+    .replace(/\[request:[^\]]+\]/g, "")
+    .replace(/\[request-status:[^\]]+\]/g, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  return {
+    cleanNotes: cleanNotes.length ? cleanNotes : null,
+    requestStatus
+  };
+}
 
 export default function CalendarPage() {
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -60,7 +88,19 @@ export default function CalendarPage() {
 
   async function load() {
     const response = await fetch("/api/calendar");
-    if (response.ok) setEntries(await response.json());
+    if (!response.ok) return;
+
+    const rawEntries = (await response.json()) as Entry[];
+    setEntries(
+      rawEntries.map((entry) => {
+        const meta = parseRequestMeta(entry.notes);
+        return {
+          ...entry,
+          notes: meta.cleanNotes,
+          requestStatus: meta.requestStatus
+        };
+      })
+    );
   }
 
   useEffect(() => {
@@ -122,6 +162,9 @@ export default function CalendarPage() {
                         })}
                       </div>
                       <div className="text-night-400 text-xs">{entry.location}</div>
+                      {entry.requestStatus ? (
+                        <div className="text-night-300 text-xs">Status: {formatRequestStatus(entry.requestStatus)}</div>
+                      ) : null}
                     </button>
                     <div>
                       <button
@@ -235,6 +278,12 @@ export default function CalendarPage() {
                 <div className="text-night-300 text-xs">Kategorie</div>
                 <div className="capitalize">{selectedEntry.category}</div>
               </div>
+              {selectedEntry.requestStatus ? (
+                <div>
+                  <div className="text-night-300 text-xs">Status</div>
+                  <div>{formatRequestStatus(selectedEntry.requestStatus)}</div>
+                </div>
+              ) : null}
               <div>
                 <div className="text-night-300 text-xs">Notizen</div>
                 <div>{selectedEntry.notes || "Keine Notizen"}</div>
