@@ -15,6 +15,23 @@ export default function ChangelogEditor() {
   const [body, setBody] = useState("");
   const [error, setError] = useState("");
 
+  const previewEntries = [
+    {
+      id: "draft",
+      title: title.trim() || "Titel Vorschau",
+      body: body.trim() || null,
+      createdAtLabel: "gerade eben",
+      isDraft: true
+    },
+    ...entries.slice(0, 2).map((entry) => ({
+      id: entry.id,
+      title: entry.title,
+      body: entry.body,
+      createdAtLabel: new Date(entry.createdAt).toLocaleString("de-DE"),
+      isDraft: false
+    }))
+  ];
+
   async function load() {
     const response = await fetch("/api/changelog");
     if (response.ok) {
@@ -69,23 +86,59 @@ export default function ChangelogEditor() {
     <div className="grid gap-6">
       <form onSubmit={createEntry} className="bg-ink/70 border border-night-800 rounded-xl p-6 grid gap-4">
         <div className="text-night-200 text-sm">Changelog aktualisieren</div>
-        <input
-          placeholder="Titel"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-         />
-        <textarea
-          placeholder="Beschreibung (optional)"
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          rows={3}
-        />
-         {error && <div className="text-red-400">{error}</div>}
-         <button className="rounded-pill px-4 py-2 bg-night-700" type="submit">
-           Eintrag speichern
-         </button>
-       </form>
+        <div className="grid xl:grid-cols-[1fr_auto] gap-6 items-start">
+          <div className="grid gap-4">
+            <input
+              placeholder="Titel"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+            <textarea
+              placeholder="Beschreibung (optional)"
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              rows={3}
+            />
+            {error && <div className="text-red-400">{error}</div>}
+            <button className="rounded-pill px-4 py-2 bg-night-700" type="submit">
+              Eintrag speichern
+            </button>
+          </div>
+
+          <div className="grid gap-2 justify-items-center">
+            <div className="text-night-300 text-xs">Vorschau (iPhone 12)</div>
+            <div className="w-[300px] h-[650px] rounded-[2.5rem] border-4 border-night-700 bg-night-900 p-2">
+              <div className="w-full h-full rounded-[2rem] bg-ink border border-night-800 overflow-hidden">
+                <div className="flex justify-center pt-2">
+                  <div className="h-6 w-32 rounded-full bg-night-800" />
+                </div>
+                <div className="p-4 grid gap-3">
+                  <div className="text-night-200 text-sm">Changelog</div>
+                  <div className="grid gap-3 max-h-[520px] overflow-y-auto pr-1">
+                    {previewEntries.map((entry) => (
+                      <div key={entry.id} className="border border-night-800 rounded-xl p-4">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="font-semibold">{entry.title}</div>
+                          {entry.isDraft ? (
+                            <span className="rounded-pill px-2 py-0.5 text-xs border border-night-600 text-night-200">
+                              Neu
+                            </span>
+                          ) : null}
+                        </div>
+                        {entry.body ? (
+                          <div className="text-night-300 text-sm mt-1 whitespace-pre-line">{entry.body}</div>
+                        ) : null}
+                        <div className="text-night-400 text-xs mt-2">{entry.createdAtLabel}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
 
        <div className="bg-ink/70 border border-night-800 rounded-xl p-6">
          <div className="text-night-200 text-sm mb-4">Aktuelle Einträge</div>
