@@ -31,19 +31,23 @@ export default function EventsPage() {
         </Link>
       </div>
       <div className="grid gap-3">
-        {events.map((event) => (
-          <Link
-            key={event.id}
-            href={`/events/${event.id}`}
-            className="border border-night-800 rounded-xl p-4 hover:bg-night-800/50"
-          >
-            <div className="font-semibold">{event.name}</div>
-            <div className="text-night-300 text-sm">
-              {new Date(event.start).toLocaleString("de-DE")}
-            </div>
-            <div className="text-night-400 text-xs">{event.status}</div>
-          </Link>
-        ))}
+        {events.length === 0 ? (
+          <div className="text-night-400 text-sm">Es gibt gerade keine Events.</div>
+        ) : (
+          events.map((event) => (
+            <Link
+              key={event.id}
+              href={`/events/${event.id}`}
+              className="border border-night-800 rounded-xl p-4 hover:bg-night-800/50"
+            >
+              <div className="font-semibold">{event.name}</div>
+              <div className="text-night-300 text-sm">
+                {new Date(event.start).toLocaleString("de-DE")}
+              </div>
+              <div className="text-night-400 text-xs">{event.status}</div>
+            </Link>
+          ))
+        )}
       </div>
     </div>
   );

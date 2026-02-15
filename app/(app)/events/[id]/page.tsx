@@ -69,26 +69,34 @@ export default function EventDetailPage() {
         <div className="bg-ink/70 border border-night-800 rounded-xl p-6">
           <div className="text-night-200 text-sm mb-4">Checkliste</div>
           <ul className="space-y-2">
-            {event.checklist.map((item) => (
-              <li key={item.id} className="border border-night-800 rounded-xl p-3">
-                <div className="text-sm text-night-400">{item.area}</div>
-                <div>{item.text}</div>
-              </li>
-            ))}
+            {event.checklist.length === 0 ? (
+              <li className="text-night-400 text-sm">Es gibt gerade keine Checkliste.</li>
+            ) : (
+              event.checklist.map((item) => (
+                <li key={item.id} className="border border-night-800 rounded-xl p-3">
+                  <div className="text-sm text-night-400">{item.area}</div>
+                  <div>{item.text}</div>
+                </li>
+              ))
+            )}
           </ul>
         </div>
         <div className="bg-ink/70 border border-night-800 rounded-xl p-6">
           <div className="text-night-200 text-sm mb-4">Equipment</div>
           <ul className="space-y-2">
-            {event.equipment.map((item) => (
-              <li key={item.id} className="border border-night-800 rounded-xl p-3">
-                <div className="font-semibold">{item.itemName}</div>
-                <div className="text-night-300 text-sm">
-                  Menge: {item.quantity} | Zustand: {item.condition}
-                </div>
-                <div className="text-night-400 text-xs">Lager: {item.storageLocation}</div>
-              </li>
-            ))}
+            {event.equipment.length === 0 ? (
+              <li className="text-night-400 text-sm">Es gibt gerade kein Equipment.</li>
+            ) : (
+              event.equipment.map((item) => (
+                <li key={item.id} className="border border-night-800 rounded-xl p-3">
+                  <div className="font-semibold">{item.itemName}</div>
+                  <div className="text-night-300 text-sm">
+                    Menge: {item.quantity} | Zustand: {item.condition}
+                  </div>
+                  <div className="text-night-400 text-xs">Lager: {item.storageLocation}</div>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       </div>

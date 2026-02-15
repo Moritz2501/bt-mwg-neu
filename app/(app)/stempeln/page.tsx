@@ -96,15 +96,23 @@ export default function TimeTrackingPage() {
             </tr>
           </thead>
           <tbody>
-            {entries.map((entry) => (
-              <tr key={entry.id} className="border-t border-night-800">
-                <td className="py-2">{new Date(entry.start).toLocaleString("de-DE")}</td>
-                <td className="py-2">
-                  {entry.end ? new Date(entry.end).toLocaleString("de-DE") : "-"}
+            {entries.length === 0 ? (
+              <tr className="border-t border-night-800">
+                <td className="py-3 text-night-400" colSpan={3}>
+                  Es gibt gerade keine Stempelzeiten.
                 </td>
-                <td className="py-2">{entry.duration ?? "-"}</td>
               </tr>
-            ))}
+            ) : (
+              entries.map((entry) => (
+                <tr key={entry.id} className="border-t border-night-800">
+                  <td className="py-2">{new Date(entry.start).toLocaleString("de-DE")}</td>
+                  <td className="py-2">
+                    {entry.end ? new Date(entry.end).toLocaleString("de-DE") : "-"}
+                  </td>
+                  <td className="py-2">{entry.duration ?? "-"}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -124,7 +132,7 @@ export default function TimeTrackingPage() {
           </div>
           <div className="grid gap-2">
             {segments.length === 0 ? (
-              <div className="text-night-400 text-sm">Keine Stempelzeiten vorhanden.</div>
+              <div className="text-night-400 text-sm">Es gibt gerade keine Stempelzeiten.</div>
             ) : (
               segments.map((user) => (
                 <div key={user.username} className="flex items-center justify-between text-sm">
@@ -144,15 +152,19 @@ export default function TimeTrackingPage() {
         <div>
           <div className="text-night-200 text-sm mb-3">Leaderboard</div>
           <div className="grid gap-2">
-            {segments.map((user, index) => (
-              <div key={user.username} className="border border-night-800 rounded-xl p-3 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="text-night-400 text-xs">#{index + 1}</div>
-                  <div className="text-night-100">{user.username}</div>
+            {segments.length === 0 ? (
+              <div className="text-night-400 text-sm">Es gibt gerade kein Leaderboard.</div>
+            ) : (
+              segments.map((user, index) => (
+                <div key={user.username} className="border border-night-800 rounded-xl p-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="text-night-400 text-xs">#{index + 1}</div>
+                    <div className="text-night-100">{user.username}</div>
+                  </div>
+                  <div className="text-night-300 text-sm">{formatMinutes(user.minutes)}</div>
                 </div>
-                <div className="text-night-300 text-sm">{formatMinutes(user.minutes)}</div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

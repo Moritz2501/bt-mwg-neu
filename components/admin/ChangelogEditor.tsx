@@ -189,28 +189,32 @@ export default function ChangelogEditor() {
        <div className="bg-ink/70 border border-night-800 rounded-xl p-6">
          <div className="text-night-200 text-sm mb-4">Aktuelle Einträge</div>
          <div className="grid gap-3">
-           {entries.map((entry) => (
-             <div key={entry.id} className="border border-night-800 rounded-xl p-4">
-               <div className="flex items-start justify-between gap-3">
-                 <div>
-                   <div className="font-semibold">{entry.title}</div>
-                  {entry.body && (
-                    <ChangelogBody body={entry.body} className="text-night-300 text-sm mt-1 grid gap-2" />
-                  )}
-                   <div className="text-night-400 text-xs mt-2">
-                     {new Date(entry.createdAt).toLocaleString("de-DE")}
+           {entries.length === 0 ? (
+             <div className="text-night-400 text-sm">Es gibt gerade keine Changelog-Einträge.</div>
+           ) : (
+             entries.map((entry) => (
+               <div key={entry.id} className="border border-night-800 rounded-xl p-4">
+                 <div className="flex items-start justify-between gap-3">
+                   <div>
+                     <div className="font-semibold">{entry.title}</div>
+                    {entry.body && (
+                      <ChangelogBody body={entry.body} className="text-night-300 text-sm mt-1 grid gap-2" />
+                    )}
+                     <div className="text-night-400 text-xs mt-2">
+                       {new Date(entry.createdAt).toLocaleString("de-DE")}
+                     </div>
                    </div>
+                   <button
+                     className="rounded-pill px-3 py-1 border border-night-600"
+                     onClick={() => removeEntry(entry.id)}
+                     type="button"
+                   >
+                     Löschen
+                   </button>
                  </div>
-                 <button
-                   className="rounded-pill px-3 py-1 border border-night-600"
-                   onClick={() => removeEntry(entry.id)}
-                   type="button"
-                 >
-                   Löschen
-                 </button>
                </div>
-             </div>
-           ))}
+             ))
+           )}
          </div>
        </div>
      </div>

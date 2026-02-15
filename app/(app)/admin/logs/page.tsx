@@ -22,21 +22,25 @@ export default async function AdminLogsPage() {
         </Link>
       </div>
       <ul className="space-y-2 max-w-full">
-        {logs.map((log: any) => (
-          <li key={log.id} className="border border-night-800 rounded-xl p-3 break-words max-w-full">
-            <div className="text-night-200 text-sm">
-              {new Date(log.createdAt).toLocaleString("de-DE")}
-            </div>
-            <div className="font-semibold">{log.action}</div>
-            <div className="text-night-300 text-sm break-words">
-              Akteur: {log.admin?.username ?? log.actorName ?? "Unbekannt"}
-              {log.targetUser ? ` | Ziel: ${log.targetUser.username}` : ""}
-            </div>
-            {log.details && (
-              <div className="text-night-400 text-xs break-all">{log.details}</div>
-            )}
-          </li>
-        ))}
+        {logs.length === 0 ? (
+          <li className="text-night-400 text-sm">Es gibt gerade keine Logs.</li>
+        ) : (
+          logs.map((log: any) => (
+            <li key={log.id} className="border border-night-800 rounded-xl p-3 break-words max-w-full">
+              <div className="text-night-200 text-sm">
+                {new Date(log.createdAt).toLocaleString("de-DE")}
+              </div>
+              <div className="font-semibold">{log.action}</div>
+              <div className="text-night-300 text-sm break-words">
+                Akteur: {log.admin?.username ?? log.actorName ?? "Unbekannt"}
+                {log.targetUser ? ` | Ziel: ${log.targetUser.username}` : ""}
+              </div>
+              {log.details && (
+                <div className="text-night-400 text-xs break-all">{log.details}</div>
+              )}
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );

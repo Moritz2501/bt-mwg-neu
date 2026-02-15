@@ -108,14 +108,18 @@ export default function RequestDetailPage() {
       <div className="bg-ink/70 border border-night-800 rounded-xl p-6">
         <div className="text-night-200 text-sm mb-4">Kommentare</div>
         <ul className="space-y-2">
-          {request.comments.map((item) => (
-            <li key={item.id} className="border border-night-800 rounded-xl p-3">
-              <div className="text-night-300 text-xs">
-                {item.user.username} - {new Date(item.createdAt).toLocaleString("de-DE")}
-              </div>
-              <div>{item.text}</div>
-            </li>
-          ))}
+          {request.comments.length === 0 ? (
+            <li className="text-night-400 text-sm">Es gibt gerade keine Kommentare.</li>
+          ) : (
+            request.comments.map((item) => (
+              <li key={item.id} className="border border-night-800 rounded-xl p-3">
+                <div className="text-night-300 text-xs">
+                  {item.user.username} - {new Date(item.createdAt).toLocaleString("de-DE")}
+                </div>
+                <div>{item.text}</div>
+              </li>
+            ))
+          )}
         </ul>
         <form onSubmit={addComment} className="mt-4 flex flex-col sm:flex-row gap-2">
           <input

@@ -104,42 +104,46 @@ export default function AdminUsersClient() {
       <div className="bg-ink/70 border border-night-800 rounded-xl p-4 sm:p-6">
         <div className="text-night-200 text-sm mb-4">Benutzerliste</div>
         <ul className="space-y-2">
-          {users.map((user) => (
-            <li
-              key={user.id}
-              className="border border-night-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
-            >
-              <div className="min-w-0">
-                <div className="font-semibold">
-                  <input
-                    className="bg-ink/60 border border-night-800 rounded-xl px-3 py-1 text-sm w-full sm:w-64"
-                    value={edits[user.id] ?? user.username}
-                    onChange={(e) =>
-                      setEdits((prev) => ({
-                        ...prev,
-                        [user.id]: e.target.value
-                      }))
-                    }
-                  />
+          {users.length === 0 ? (
+            <li className="text-night-400 text-sm">Es gibt gerade keine Benutzer.</li>
+          ) : (
+            users.map((user) => (
+              <li
+                key={user.id}
+                className="border border-night-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+              >
+                <div className="min-w-0">
+                  <div className="font-semibold">
+                    <input
+                      className="bg-ink/60 border border-night-800 rounded-xl px-3 py-1 text-sm w-full sm:w-64"
+                      value={edits[user.id] ?? user.username}
+                      onChange={(e) =>
+                        setEdits((prev) => ({
+                          ...prev,
+                          [user.id]: e.target.value
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="text-night-300 text-sm">{user.role}</div>
                 </div>
-                <div className="text-night-300 text-sm">{user.role}</div>
-              </div>
-              <div className="flex flex-wrap gap-2 sm:justify-end">
-                <button
-                  className="rounded-pill px-3 py-1 border border-night-600"
-                  onClick={() => updateUsername(user)}
-                >
-                  Speichern
-                </button>
-                <button className="rounded-pill px-3 py-1 border border-night-600" onClick={() => toggleActive(user)}>
-                  {user.active ? "Deaktivieren" : "Aktivieren"}
-                </button>
-                <button className="rounded-pill px-3 py-1 border border-night-600" onClick={() => remove(user)}>
-                  Löschen
-                </button>
-              </div>
-            </li>
-          ))}
+                <div className="flex flex-wrap gap-2 sm:justify-end">
+                  <button
+                    className="rounded-pill px-3 py-1 border border-night-600"
+                    onClick={() => updateUsername(user)}
+                  >
+                    Speichern
+                  </button>
+                  <button className="rounded-pill px-3 py-1 border border-night-600" onClick={() => toggleActive(user)}>
+                    {user.active ? "Deaktivieren" : "Aktivieren"}
+                  </button>
+                  <button className="rounded-pill px-3 py-1 border border-night-600" onClick={() => remove(user)}>
+                    Löschen
+                  </button>
+                </div>
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </div>

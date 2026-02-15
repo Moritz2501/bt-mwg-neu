@@ -27,17 +27,21 @@ export default function RequestsPage() {
     <div className="grid gap-6">
       <h1 className="text-2xl font-semibold">Anfragen</h1>
       <div className="grid gap-3">
-        {requests.map((request) => (
-          <Link
-            key={request.id}
-            href={`/requests/${request.id}`}
-            className="border border-night-800 rounded-xl p-4 hover:bg-night-800/50"
-          >
-            <div className="font-semibold">{request.eventTitle}</div>
-            <div className="text-night-300 text-sm">{request.requesterName}</div>
-            <div className="text-night-400 text-xs">{request.status}</div>
-          </Link>
-        ))}
+        {requests.length === 0 ? (
+          <div className="text-night-400 text-sm">Es gibt gerade keine Anfragen.</div>
+        ) : (
+          requests.map((request) => (
+            <Link
+              key={request.id}
+              href={`/requests/${request.id}`}
+              className="border border-night-800 rounded-xl p-4 hover:bg-night-800/50"
+            >
+              <div className="font-semibold">{request.eventTitle}</div>
+              <div className="text-night-300 text-sm">{request.requesterName}</div>
+              <div className="text-night-400 text-xs">{request.status}</div>
+            </Link>
+          ))
+        )}
       </div>
     </div>
   );
