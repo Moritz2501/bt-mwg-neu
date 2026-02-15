@@ -106,15 +106,24 @@ export default function CalendarPage() {
             ) : (
               <div className="grid gap-2">
                 {entriesByMonth[index].map((entry) => (
-                  <div key={entry.id} className="border border-night-800 rounded-xl p-3">
-                    <div className="flex items-start justify-between gap-2">
-                      <button
-                        className="font-semibold text-sm text-left hover:text-night-100"
-                        type="button"
-                        onClick={() => setSelectedEntry(entry)}
-                      >
-                        {entry.title}
-                      </button>
+                  <div key={entry.id} className="border border-night-800 rounded-xl p-3 flex items-start justify-between gap-2">
+                    <button
+                      className="flex-1 min-w-0 text-left grid gap-1 hover:text-night-100"
+                      type="button"
+                      onClick={() => setSelectedEntry(entry)}
+                    >
+                      <div className="font-semibold text-sm">{entry.title}</div>
+                      <div className="text-night-300 text-xs">
+                        {new Date(entry.start).toLocaleDateString("de-DE", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        })}
+                      </div>
+                      <div className="text-night-400 text-xs">{entry.location}</div>
+                    </button>
+                    <div>
                       <button
                         className="rounded-pill px-2 py-1 border border-night-700 text-xs"
                         onClick={() => removeEntry(entry.id)}
@@ -123,15 +132,6 @@ export default function CalendarPage() {
                         Löschen
                       </button>
                     </div>
-                    <div className="text-night-300 text-xs">
-                      {new Date(entry.start).toLocaleDateString("de-DE", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit"
-                      })}
-                    </div>
-                    <div className="text-night-400 text-xs">{entry.location}</div>
                   </div>
                 ))}
               </div>
