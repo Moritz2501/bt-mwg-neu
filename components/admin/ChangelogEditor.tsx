@@ -107,7 +107,6 @@ export default function ChangelogEditor() {
           </div>
 
           <div className="grid gap-2 justify-items-center">
-            <div className="text-night-300 text-xs">Vorschau (iPhone 12)</div>
             <div className="w-[300px] h-[650px] rounded-[2.5rem] border-4 border-night-700 bg-night-900 p-2">
               <div className="w-full h-full rounded-[2rem] bg-ink border border-night-800 overflow-hidden">
                 <div className="flex justify-center pt-2">
@@ -115,7 +114,7 @@ export default function ChangelogEditor() {
                 </div>
                 <div className="p-4 grid gap-3">
                   <div className="text-night-200 text-sm">Changelog</div>
-                  <div className="grid gap-3 max-h-[520px] overflow-y-auto pr-1">
+                  <div className="grid gap-3">
                     {previewEntries.map((entry) => (
                       <div key={entry.id} className="border border-night-800 rounded-xl p-4">
                         <div className="flex items-center justify-between gap-2">
