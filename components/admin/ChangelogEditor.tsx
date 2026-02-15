@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ChangelogBody from "@/components/ChangelogBody";
 
 type ChangelogEntry = {
   id: string;
@@ -95,7 +96,7 @@ export default function ChangelogEditor() {
               required
             />
             <textarea
-              placeholder="Beschreibung (optional)"
+              placeholder={"Beschreibung (optional)\nStichpunkte mit - oder * beginnen"}
               value={body}
               onChange={(e) => setBody(e.target.value)}
               rows={3}
@@ -126,7 +127,7 @@ export default function ChangelogEditor() {
                           ) : null}
                         </div>
                         {entry.body ? (
-                          <div className="text-night-300 text-sm mt-1 whitespace-pre-line">{entry.body}</div>
+                          <ChangelogBody body={entry.body} className="text-night-300 text-sm mt-1 grid gap-2" />
                         ) : null}
                         <div className="text-night-400 text-xs mt-2">{entry.createdAtLabel}</div>
                       </div>
@@ -148,9 +149,7 @@ export default function ChangelogEditor() {
                  <div>
                    <div className="font-semibold">{entry.title}</div>
                   {entry.body && (
-                    <div className="text-night-300 text-sm mt-1 whitespace-pre-line">
-                      {entry.body}
-                    </div>
+                    <ChangelogBody body={entry.body} className="text-night-300 text-sm mt-1 grid gap-2" />
                   )}
                    <div className="text-night-400 text-xs mt-2">
                      {new Date(entry.createdAt).toLocaleString("de-DE")}

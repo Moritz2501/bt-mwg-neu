@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ChangelogBody from "@/components/ChangelogBody";
 
 type ChangelogEntry = {
   id: string;
@@ -36,9 +37,7 @@ export default function ChangelogList() {
             <div key={entry.id} className="border border-night-800 rounded-xl p-4">
               <div className="font-semibold">{entry.title}</div>
               {entry.body && (
-                <div className="text-night-300 text-sm mt-1 whitespace-pre-line">
-                  {entry.body}
-                </div>
+                <ChangelogBody body={entry.body} className="text-night-300 text-sm mt-1 grid gap-2" />
               )}
               <div className="text-night-400 text-xs mt-2">
                 {new Date(entry.createdAt).toLocaleString("de-DE")}
