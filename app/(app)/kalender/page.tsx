@@ -9,11 +9,13 @@ type Entry = {
   end: string;
   location: string;
   category: string;
+  notes?: string | null;
 };
 
 export default function CalendarPage() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
   const [form, setForm] = useState({
     title: "",
     start: "",
@@ -106,7 +108,13 @@ export default function CalendarPage() {
                 {entriesByMonth[index].map((entry) => (
                   <div key={entry.id} className="border border-night-800 rounded-xl p-3">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="font-semibold text-sm">{entry.title}</div>
+                      <button
+                        className="font-semibold text-sm text-left hover:text-night-100"
+                        type="button"
+                        onClick={() => setSelectedEntry(entry)}
+                      >
+                        {entry.title}
+                      </button>
                       <button
                         className="rounded-pill px-2 py-1 border border-night-700 text-xs"
                         onClick={() => removeEntry(entry.id)}
@@ -189,6 +197,49 @@ export default function CalendarPage() {
                 Speichern
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {selectedEntry && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+          <div className="w-full max-w-lg bg-ink border border-night-800 rounded-xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-lg font-semibold">Event-Details</div>
+              <button
+                className="rounded-pill px-3 py-1 border border-night-600"
+                onClick={() => setSelectedEntry(null)}
+                type="button"
+              >
+                Zurück
+              </button>
+            </div>
+            <div className="grid gap-3">
+              <div>
+                <div className="text-night-300 text-xs">Titel</div>
+                <div className="font-semibold">{selectedEntry.title}</div>
+              </div>
+              <div>
+                <div className="text-night-300 text-xs">Start</div>
+                <div>{new Date(selectedEntry.start).toLocaleString("de-DE")}</div>
+              </div>
+              <div>
+                <div className="text-night-300 text-xs">Ende</div>
+                <div>{new Date(selectedEntry.end).toLocaleString("de-DE")}</div>
+              </div>
+              <div>
+                <div className="text-night-300 text-xs">Ort</div>
+                <div>{selectedEntry.location}</div>
+              </div>
+              <div>
+                <div className="text-night-300 text-xs">Kategorie</div>
+                <div className="capitalize">{selectedEntry.category}</div>
+              </div>
+              <div>
+                <div className="text-night-300 text-xs">Notizen</div>
+                <div>{selectedEntry.notes || "Keine Notizen"}</div>
+              </div>
+            </div>
           </div>
         </div>
       )}
