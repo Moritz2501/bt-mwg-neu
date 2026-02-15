@@ -126,7 +126,7 @@ export default function ChangelogEditor() {
                   previewDevice === "ipad" ? "bg-night-700 border-night-700" : "border-night-600"
                 }`}
               >
-                iPad Querformat
+                iPad
               </button>
             </div>
 
